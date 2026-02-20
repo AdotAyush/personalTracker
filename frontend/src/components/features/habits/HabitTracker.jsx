@@ -29,7 +29,7 @@ function HabitFormModal({ isOpen, onClose, habit = null }) {
       ? habitService.updateHabit(habit._id, data)
       : habitService.createHabit(data),
     onSuccess: () => {
-      queryClient.invalidateQueries(['habits']);
+      queryClient.invalidateQueries({ predicate: (query) => query.queryKey[0] === 'habits' || query.queryKey[0] === 'habits-today' || query.queryKey[0] === 'habit-heatmap' });
       toast.success(isEditing ? 'Habit updated!' : 'Habit created! 🎉');
       onClose();
     },

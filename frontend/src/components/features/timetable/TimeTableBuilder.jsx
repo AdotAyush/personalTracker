@@ -153,28 +153,28 @@ export default function TimeTableBuilder({ tableId }) {
 
   const addColumnMutation = useMutation({
     mutationFn: (col) => timetableService.addColumn(tableId, col),
-    onSuccess: () => { queryClient.invalidateQueries(['timetable', tableId]); toast.success('Column added'); },
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['timetable', tableId] }); queryClient.invalidateQueries({ queryKey: ['timetables'] }); toast.success('Column added'); },
   });
 
   const deleteColumnMutation = useMutation({
     mutationFn: (colId) => timetableService.deleteColumn(tableId, colId),
-    onSuccess: () => queryClient.invalidateQueries(['timetable', tableId]),
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['timetable', tableId] }); queryClient.invalidateQueries({ queryKey: ['timetables'] }); },
   });
 
   const addRowMutation = useMutation({
     mutationFn: (cells) => timetableService.addRow(tableId, { cells }),
-    onSuccess: () => queryClient.invalidateQueries(['timetable', tableId]),
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['timetable', tableId] }); queryClient.invalidateQueries({ queryKey: ['timetables'] }); },
   });
 
   const updateCellMutation = useMutation({
     mutationFn: ({ rowId, colId, value }) =>
       timetableService.updateRow(tableId, rowId, { cells: { [colId]: value } }),
-    onSuccess: () => queryClient.invalidateQueries(['timetable', tableId]),
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['timetable', tableId] }); queryClient.invalidateQueries({ queryKey: ['timetables'] }); },
   });
 
   const deleteRowMutation = useMutation({
     mutationFn: (rowId) => timetableService.deleteRow(tableId, rowId),
-    onSuccess: () => queryClient.invalidateQueries(['timetable', tableId]),
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['timetable', tableId] }); queryClient.invalidateQueries({ queryKey: ['timetables'] }); },
   });
 
   const table = data?.data;

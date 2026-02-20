@@ -38,7 +38,7 @@ function EventForm({ isOpen, onClose, selectedDate }) {
       endDate:   new Date(`${form.endDate || form.startDate}T${form.endTime}`),
     }),
     onSuccess: () => {
-      queryClient.invalidateQueries(['calendar']);
+      queryClient.invalidateQueries({ queryKey: ['calendar'] });
       toast.success('Event created!');
       onClose();
     },
@@ -114,7 +114,7 @@ export default function CalendarPage() {
 
   const deleteMutation = useMutation({
     mutationFn: (id) => calendarService.deleteEvent(id),
-    onSuccess: () => { queryClient.invalidateQueries(['calendar']); toast.success('Event deleted'); },
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['calendar'] }); toast.success('Event deleted'); },
   });
 
   const events = Array.isArray(data?.data) ? data.data : [];

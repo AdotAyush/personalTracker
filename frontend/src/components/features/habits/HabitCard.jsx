@@ -29,9 +29,8 @@ export default function HabitCard({ habit, onClick }) {
       ? habitService.removeCompletion(habit._id, { date: new Date().toISOString() })
       : habitService.logCompletion(habit._id, { date: new Date().toISOString(), value: 1 }),
     onSuccess: () => {
-      queryClient.invalidateQueries(['habits']);
-      queryClient.invalidateQueries(['habits-today']);
-      if (!isCompleted) toast.success(`🔥 ${habit.name} completed!`);
+      queryClient.invalidateQueries({ predicate: (query) => query.queryKey[0] === 'habits' || query.queryKey[0] === 'habits-today' || query.queryKey[0] === 'habit-heatmap' });
+      if (!isCompleted) toast.success(`🔥 ${habit.title} completed!`);
     },
     onError: () => toast.error('Failed to update habit'),
   });

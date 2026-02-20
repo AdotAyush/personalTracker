@@ -56,7 +56,7 @@ export default function TaskForm({ isOpen, onClose, task = null }) {
       ? taskService.updateTask(task._id, data)
       : taskService.createTask(data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['tasks'] });
+      queryClient.invalidateQueries({ predicate: (query) => query.queryKey[0] === 'tasks' });
       toast.success(isEditing ? 'Task updated!' : 'Task created!');
       onClose();
     },

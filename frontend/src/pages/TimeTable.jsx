@@ -13,7 +13,7 @@ function NewTableModal({ isOpen, onClose }) {
   const mutation = useMutation({
     mutationFn: () => timetableService.create({ name }),
     onSuccess: () => {
-      queryClient.invalidateQueries(['timetables']);
+      queryClient.invalidateQueries({ queryKey: ['timetables'] });
       toast.success('Table created!');
       setName('');
       onClose();
@@ -57,7 +57,7 @@ export default function TimeTablePage() {
   const deleteMutation = useMutation({
     mutationFn: (id) => timetableService.delete(id),
     onSuccess: (_, id) => {
-      queryClient.invalidateQueries(['timetables']);
+      queryClient.invalidateQueries({ queryKey: ['timetables'] });
       if (activeId === id) setActiveId(null);
       toast.success('Table deleted');
     },
