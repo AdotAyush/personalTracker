@@ -23,15 +23,15 @@ function StatCard({ label, value, sub, icon: Icon, color, index }) {
       variants={cardVariants}
       initial="hidden"
       animate="visible"
-      className="card p-5"
+      className="card p-5 hover:shadow-lg transition-shadow duration-300"
     >
       <div className="flex items-start justify-between">
         <div>
-          <p className="text-xs text-zinc-500 uppercase tracking-wide">{label}</p>
-          <p className={`text-3xl font-bold mt-1 ${color}`}>{value}</p>
-          {sub && <p className="text-xs text-zinc-500 mt-1">{sub}</p>}
+          <p className="text-xs text-zinc-500 dark:text-zinc-400 uppercase tracking-wide font-medium">{label}</p>
+          <p className={`text-3xl font-bold mt-1.5 ${color}`}>{value}</p>
+          {sub && <p className="text-xs text-zinc-400 dark:text-zinc-500 mt-1">{sub}</p>}
         </div>
-        <div className={`p-2.5 rounded-xl bg-zinc-800 ${color}`}>
+        <div className={`p-2.5 rounded-xl bg-zinc-100 dark:bg-zinc-800 ${color} transition-transform hover:scale-110`}>
           <Icon className="w-5 h-5" />
         </div>
       </div>
@@ -42,10 +42,10 @@ function StatCard({ label, value, sub, icon: Icon, color, index }) {
 const CustomTooltip = ({ active, payload, label }) => {
   if (!active || !payload?.length) return null;
   return (
-    <div className="card px-3 py-2 text-xs">
-      <p className="text-zinc-400">{label}</p>
+    <div className="card px-3 py-2 text-xs shadow-xl">
+      <p className="text-zinc-600 dark:text-zinc-400 font-medium">{label}</p>
       {payload.map(p => (
-        <p key={p.dataKey} style={{ color: p.color }}>{p.name}: {p.value}</p>
+        <p key={p.dataKey} style={{ color: p.color }} className="font-semibold">{p.name}: {p.value}</p>
       ))}
     </div>
   );
@@ -117,20 +117,20 @@ export default function Dashboard() {
   const greeting = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 animate-fade-in">
       {/* Greeting */}
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-        <h1 className="text-2xl font-bold text-white">
+        <h1 className="text-2xl md:text-3xl font-bold text-zinc-900 dark:text-white">
           {greeting}, {user?.name?.split(' ')[0] || 'there'} 👋
         </h1>
-        <p className="text-zinc-500 mt-1">Here's what's happening today.</p>
+        <p className="text-zinc-600 dark:text-zinc-400 mt-1">Here's what's happening today.</p>
       </motion.div>
 
       {/* Stats grid */}
       {isLoading ? (
         <SkeletonStats />
       ) : (
-        <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
           {stats.map((s, i) => <StatCard key={s.label} {...s} index={i} />)}
         </div>
       )}
@@ -141,9 +141,9 @@ export default function Dashboard() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
-          className="card p-5"
+          className="card p-5 md:p-6"
         >
-          <h2 className="font-semibold text-white mb-4">7-Day Productivity Trend</h2>
+          <h2 className="font-semibold text-zinc-900 dark:text-white mb-4">7-Day Productivity Trend</h2>
           <ResponsiveContainer width="100%" height={200}>
             <AreaChart data={trend} margin={{ left: -10, right: 10, top: 5 }}>
               <defs>
@@ -156,9 +156,9 @@ export default function Dashboard() {
                   <stop offset="95%" stopColor="#f97316" stopOpacity={0} />
                 </linearGradient>
               </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="#27272a" vertical={false} />
-              <XAxis dataKey="date" tick={{ fontSize: 11, fill: '#71717a' }} axisLine={false} tickLine={false} />
-              <YAxis tick={{ fontSize: 11, fill: '#71717a' }} axisLine={false} tickLine={false} />
+              <CartesianGrid strokeDasharray="3 3" stroke="currentColor" className="text-zinc-200 dark:text-zinc-800" vertical={false} />
+              <XAxis dataKey="date" tick={{ fontSize: 11 }} className="text-zinc-500 dark:text-zinc-400" axisLine={false} tickLine={false} />
+              <YAxis tick={{ fontSize: 11 }} className="text-zinc-500 dark:text-zinc-400" axisLine={false} tickLine={false} />
               <Tooltip content={<CustomTooltip />} />
               <Area type="monotone" dataKey="tasksDone"        name="Tasks"  stroke="#6366f1" fill="url(#taskGrad)"  strokeWidth={2} />
               <Area type="monotone" dataKey="habitsCompleted"  name="Habits" stroke="#f97316" fill="url(#habitGrad)" strokeWidth={2} />
@@ -173,9 +173,9 @@ export default function Dashboard() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
-          className="card p-5"
+          className="card p-5 md:p-6"
         >
-          <h2 className="font-semibold text-white mb-4">Tasks by Priority</h2>
+          <h2 className="font-semibold text-zinc-900 dark:text-white mb-4">Tasks by Priority</h2>
           <div className="space-y-3">
             {Object.entries(analytics.priorityDistribution).map(([priority, count]) => {
               const total = Object.values(analytics.priorityDistribution).reduce((a, b) => a + b, 0);
@@ -183,8 +183,8 @@ export default function Dashboard() {
               const colors = { urgent: 'bg-red-500', high: 'bg-orange-500', medium: 'bg-yellow-500', low: 'bg-emerald-500' };
               return (
                 <div key={priority} className="flex items-center gap-3">
-                  <span className="text-xs text-zinc-500 w-14 capitalize">{priority}</span>
-                  <div className="flex-1 h-2 bg-zinc-800 rounded-full overflow-hidden">
+                  <span className="text-xs text-zinc-600 dark:text-zinc-400 w-14 capitalize font-medium">{priority}</span>
+                  <div className="flex-1 h-2 bg-zinc-200 dark:bg-zinc-800 rounded-full overflow-hidden">
                     <motion.div
                       className={`h-full rounded-full ${colors[priority] || 'bg-primary-500'}`}
                       initial={{ width: 0 }}
@@ -192,7 +192,7 @@ export default function Dashboard() {
                       transition={{ duration: 0.6, ease: 'easeOut' }}
                     />
                   </div>
-                  <span className="text-xs text-zinc-400 w-6 text-right">{count}</span>
+                  <span className="text-xs text-zinc-500 dark:text-zinc-400 w-8 text-right font-semibold">{count}</span>
                 </div>
               );
             })}

@@ -41,7 +41,7 @@ export default function Sidebar() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-40 bg-black/60 md:hidden"
+            className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm md:hidden"
             onClick={() => dispatch(toggleSidebar())}
           />
         )}
@@ -54,17 +54,17 @@ export default function Sidebar() {
         transition={{ type: 'spring', stiffness: 300, damping: 30 }}
         className={clsx(
           'fixed left-0 top-0 h-full w-64 z-50',
-          'bg-zinc-900 border-r border-zinc-800',
-          'flex flex-col',
+          'bg-white dark:bg-zinc-900 border-r border-zinc-200 dark:border-zinc-800',
+          'flex flex-col shadow-xl md:shadow-none transition-colors duration-300',
         )}
       >
         {/* Logo */}
-        <div className="flex items-center justify-between px-4 py-4 border-b border-zinc-800">
+        <div className="flex items-center justify-between px-4 py-4 border-b border-zinc-200 dark:border-zinc-800">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center shadow-lg">
               <ZapIcon className="w-4 h-4 text-white" />
             </div>
-            <span className="font-bold text-white text-sm">PersonalTracker</span>
+            <span className="font-bold text-zinc-900 dark:text-white text-sm">PersonalTracker</span>
           </div>
           <button
             onClick={() => dispatch(toggleSidebar())}
@@ -76,12 +76,12 @@ export default function Sidebar() {
 
         {/* Productivity score */}
         {dashData && (
-          <div className="mx-3 my-3 p-3 bg-primary-600/10 border border-primary-500/20 rounded-xl">
+          <div className="mx-3 my-3 p-3 bg-gradient-to-br from-primary-50 to-primary-100 dark:from-primary-600/10 dark:to-primary-500/5 border border-primary-200 dark:border-primary-500/20 rounded-xl">
             <div className="flex items-center justify-between mb-1.5">
-              <span className="text-xs text-zinc-400">Productivity Score</span>
-              <span className="text-xs font-bold text-primary-400">{dashData.productivityScore}/100</span>
+              <span className="text-xs font-medium text-primary-700 dark:text-zinc-400">Productivity Score</span>
+              <span className="text-xs font-bold text-primary-700 dark:text-primary-400">{dashData.productivityScore}/100</span>
             </div>
-            <div className="h-1.5 bg-zinc-800 rounded-full overflow-hidden">
+            <div className="h-1.5 bg-primary-200 dark:bg-zinc-800 rounded-full overflow-hidden">
               <motion.div
                 className="h-full bg-gradient-to-r from-primary-600 to-primary-400 rounded-full"
                 initial={{ width: 0 }}
@@ -98,13 +98,19 @@ export default function Sidebar() {
             <NavLink
               key={to}
               to={to}
+              onClick={() => {
+                // Close sidebar on mobile after clicking
+                if (window.innerWidth < 768) {
+                  dispatch(toggleSidebar());
+                }
+              }}
               className={({ isActive }) =>
                 clsx(isActive ? 'sidebar-item-active' : 'sidebar-item', 'group')
               }
             >
               <Icon className="w-4 h-4 flex-shrink-0" />
               <span className="flex-1">{label}</span>
-              <span className="kbd opacity-0 group-hover:opacity-100 transition-opacity">{shortcut}</span>
+              <span className="kbd text-xs opacity-0 group-hover:opacity-100 transition-opacity">{shortcut}</span>
             </NavLink>
           ))}
 
@@ -115,23 +121,23 @@ export default function Sidebar() {
           >
             <TimerIcon className="w-4 h-4 flex-shrink-0" />
             <span className="flex-1">Pomodoro</span>
-            <span className="kbd opacity-0 group-hover:opacity-100 transition-opacity">P</span>
+            <span className="kbd text-xs opacity-0 group-hover:opacity-100 transition-opacity">P</span>
           </button>
         </nav>
 
         {/* User profile */}
-        <div className="p-3 border-t border-zinc-800">
-          <NavLink to="/settings" className="flex items-center gap-3 p-2 rounded-xl hover:bg-white/5 transition-colors">
+        <div className="p-3 border-t border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950/50">
+          <NavLink to="/settings" className="flex items-center gap-3 p-2 rounded-xl hover:bg-zinc-100 dark:hover:bg-white/5 transition-colors">
             <img
-              src={user?.avatar}
+              src={user?.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.name || 'User')}&background=6366f1&color=fff`}
               alt={user?.name}
               className="w-8 h-8 rounded-full ring-2 ring-primary-500/30"
             />
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-white truncate">{user?.name}</p>
-              <p className="text-xs text-zinc-500 truncate">{user?.email}</p>
+              <p className="text-sm font-medium text-zinc-900 dark:text-white truncate">{user?.name || 'User'}</p>
+              <p className="text-xs text-zinc-500 dark:text-zinc-500 truncate">{user?.email || 'user@example.com'}</p>
             </div>
-            <SettingsIcon className="w-4 h-4 text-zinc-500 flex-shrink-0" />
+            <SettingsIcon className="w-4 h-4 text-zinc-400 dark:text-zinc-500 flex-shrink-0" />
           </NavLink>
         </div>
       </motion.aside>

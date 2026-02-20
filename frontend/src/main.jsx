@@ -8,6 +8,21 @@ import App from './App';
 import { store } from './store';
 import './index.css';
 
+// Initialize theme on page load
+const savedTheme = localStorage.getItem('pt_theme') || 'dark';
+const root = document.documentElement;
+if (savedTheme === 'dark') {
+  root.classList.add('dark');
+  root.classList.remove('light');
+} else if (savedTheme === 'light') {
+  root.classList.remove('dark');
+  root.classList.add('light');
+} else {
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  root.classList.toggle('dark', prefersDark);
+  root.classList.toggle('light', !prefersDark);
+}
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -35,12 +50,14 @@ ReactDOM.createRoot(document.getElementById('root')).render(
           position="top-right"
           toastOptions={{
             duration: 4000,
+            className: '',
             style: {
-              background: '#18181b',
-              color: '#fafafa',
-              border: '1px solid #27272a',
+              background: 'rgb(var(--color-card-bg))',
+              color: 'rgb(var(--color-text))',
+              border: '1px solid rgb(var(--color-border))',
               borderRadius: '12px',
               fontSize: '14px',
+              boxShadow: 'var(--shadow-lg)',
             },
             success: { iconTheme: { primary: '#6366f1', secondary: '#fff' } },
             error: { iconTheme: { primary: '#ef4444', secondary: '#fff' } },

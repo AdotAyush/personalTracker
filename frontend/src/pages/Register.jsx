@@ -16,21 +16,21 @@ export default function Register() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-zinc-950 px-4 py-8">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-zinc-50 to-zinc-100 dark:from-zinc-950 dark:to-zinc-900 px-4 py-8 transition-colors duration-300">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         className="w-full max-w-md"
       >
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-primary-600 mb-4">
+          <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-primary-500 to-primary-700 shadow-lg mb-4">
             <ZapIcon className="w-8 h-8 text-white" />
           </div>
-          <h1 className="text-2xl font-bold text-white">Create your account</h1>
-          <p className="text-zinc-500 mt-1">Start tracking your productivity</p>
+          <h1 className="text-2xl md:text-3xl font-bold text-zinc-900 dark:text-white">Create your account</h1>
+          <p className="text-zinc-600 dark:text-zinc-400 mt-1">Start tracking your productivity</p>
         </div>
 
-        <div className="card p-8 space-y-5">
+        <div className="card p-6 md:p-8 space-y-5 shadow-xl">
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className="label">Full Name</label>
@@ -70,7 +70,7 @@ export default function Register() {
                 <button
                   type="button"
                   onClick={() => setShowPass(v => !v)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 dark:text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300"
                 >
                   {showPass ? <EyeOffIcon className="w-4 h-4" /> : <EyeIcon className="w-4 h-4" />}
                 </button>
@@ -88,7 +88,7 @@ export default function Register() {
                 required
               />
               {form.confirmPassword && form.confirmPassword !== form.password && (
-                <p className="text-xs text-red-400 mt-1">Passwords do not match</p>
+                <p className="text-xs text-red-500 mt-1 font-medium">Passwords do not match</p>
               )}
             </div>
 
@@ -101,14 +101,14 @@ export default function Register() {
             </button>
           </form>
 
-          <p className="text-center text-sm text-zinc-500">
+          <p className="text-center text-sm text-zinc-600 dark:text-zinc-400">
             Already have an account?{' '}
-            <Link to="/login" className="text-primary-400 hover:text-primary-300 font-medium">
+            <Link to="/login" className="text-primary-600 dark:text-primary-400 hover:text-primary-500 dark:hover:text-primary-300 font-semibold">
               Sign in
             </Link>
           </p>
 
-          <p className="text-xs text-center text-zinc-600">
+          <p className="text-xs text-center text-zinc-500 dark:text-zinc-500">
             By creating an account you agree to our Terms of Service and Privacy Policy.
           </p>
         </div>

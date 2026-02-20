@@ -15,7 +15,7 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-zinc-950 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-zinc-50 to-zinc-100 dark:from-zinc-950 dark:to-zinc-900 px-4 transition-colors duration-300">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -23,14 +23,14 @@ export default function Login() {
       >
         {/* Logo */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-primary-600 mb-4">
+          <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-primary-500 to-primary-700 shadow-lg mb-4">
             <ZapIcon className="w-8 h-8 text-white" />
           </div>
-          <h1 className="text-2xl font-bold text-white">Welcome back</h1>
-          <p className="text-zinc-500 mt-1">Sign in to your productivity hub</p>
+          <h1 className="text-2xl md:text-3xl font-bold text-zinc-900 dark:text-white">Welcome back</h1>
+          <p className="text-zinc-600 dark:text-zinc-400 mt-1">Sign in to your productivity hub</p>
         </div>
 
-        <div className="card p-8 space-y-5">
+        <div className="card p-6 md:p-8 space-y-5 shadow-xl">
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className="label">Email</label>
@@ -48,7 +48,7 @@ export default function Login() {
             <div>
               <div className="flex justify-between items-center mb-1">
                 <label className="label mb-0">Password</label>
-                <Link to="/forgot-password" className="text-xs text-primary-400 hover:text-primary-300">
+                <Link to="/forgot-password" className="text-xs text-primary-600 dark:text-primary-400 hover:text-primary-500 dark:hover:text-primary-300 font-medium">
                   Forgot password?
                 </Link>
               </div>
@@ -64,7 +64,7 @@ export default function Login() {
                 <button
                   type="button"
                   onClick={() => setShowPass(v => !v)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-200"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 dark:text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300"
                 >
                   {showPass ? <EyeOffIcon className="w-4 h-4" /> : <EyeIcon className="w-4 h-4" />}
                 </button>
@@ -82,10 +82,10 @@ export default function Login() {
 
           <div className="relative">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-zinc-800" />
+              <div className="w-full border-t border-zinc-300 dark:border-zinc-800" />
             </div>
-            <div className="relative flex justify-center text-xs text-zinc-500">
-              <span className="bg-zinc-900 px-3">or</span>
+            <div className="relative flex justify-center text-xs text-zinc-500 dark:text-zinc-400">
+              <span className="bg-white dark:bg-zinc-900 px-3">or</span>
             </div>
           </div>
 
@@ -102,9 +102,9 @@ export default function Login() {
             Continue with Google
           </a>
 
-          <p className="text-center text-sm text-zinc-500">
+          <p className="text-center text-sm text-zinc-600 dark:text-zinc-400">
             Don't have an account?{' '}
-            <Link to="/register" className="text-primary-400 hover:text-primary-300 font-medium">
+            <Link to="/register" className="text-primary-600 dark:text-primary-400 hover:text-primary-500 dark:hover:text-primary-300 font-semibold">
               Sign up free
             </Link>
           </p>

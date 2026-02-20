@@ -8,24 +8,36 @@
   --sidebar-width: 260px;
   --header-height: 64px;
   --radius: 0.75rem;
-  color-scheme: dark;
 }
 
 .light {
   color-scheme: light;
-  --color-bg: 255 255 255;
-  --color-surface: 244 244 245;
-  --color-border: 228 228 231;
-  --color-text: 9 9 11;
-  --color-text-muted: 113 113 122;
+  --color-bg: 249 250 251;
+  --color-surface: 255 255 255;
+  --color-surface-elevated: 255 255 255;
+  --color-border: 229 231 235;
+  --color-text: 17 24 39;
+  --color-text-muted: 107 114 128;
+  --color-card-bg: 255 255 255;
+  --color-input-bg: 249 250 251;
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
 }
 
 .dark {
+  color-scheme: dark;
   --color-bg: 9 9 11;
   --color-surface: 24 24 27;
+  --color-surface-elevated: 39 39 42;
   --color-border: 39 39 42;
   --color-text: 250 250 250;
-  --color-text-muted: 113 113 122;
+  --color-text-muted: 161 161 170;
+  --color-card-bg: 24 24 27;
+  --color-input-bg: 24 24 27;
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.5);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.5);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.7);
 }
 
 /* ─── Base ──────────────────────────────────────────────────────────────────*/
@@ -37,11 +49,14 @@ html {
 }
 
 body {
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
   background-color: rgb(var(--color-bg));
   color: rgb(var(--color-text));
   min-height: 100vh;
   overflow-x: hidden;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 /* ─── Scrollbar ──────────────────────────────────────────────────────────────*/
@@ -53,50 +68,62 @@ body {
 }
 ::-webkit-scrollbar-thumb:hover { background: rgba(99, 102, 241, 0.6); }
 
+.light ::-webkit-scrollbar-thumb {
+  background: rgba(99, 102, 241, 0.2);
+}
+.light ::-webkit-scrollbar-thumb:hover { background: rgba(99, 102, 241, 0.4); }
+
 /* ─── Selection ─────────────────────────────────────────────────────────────*/
 ::selection { background: rgba(99, 102, 241, 0.3); color: inherit; }
 
 /* ─── Utility Classes ───────────────────────────────────────────────────────*/
 @layer components {
   .btn {
-    @apply inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl font-medium text-sm
+    @apply inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl font-medium text-sm
            transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed
-           focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2;
+           focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2
+           dark:focus-visible:ring-offset-zinc-900 light:focus-visible:ring-offset-white;
   }
 
   .btn-primary {
-    @apply btn bg-primary-600 hover:bg-primary-500 text-white shadow-md hover:shadow-glow active:scale-95;
+    @apply btn bg-primary-600 hover:bg-primary-500 text-white shadow-md hover:shadow-glow active:scale-[0.98]
+           dark:shadow-primary-500/20 light:shadow-primary-500/30;
   }
 
   .btn-secondary {
-    @apply btn bg-surface-800 dark:bg-surface-800 hover:bg-surface-700 text-white border border-surface-700;
+    @apply btn bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 
+           text-zinc-900 dark:text-white border border-zinc-300 dark:border-zinc-700;
   }
 
   .btn-ghost {
-    @apply btn hover:bg-white/5 text-zinc-400 hover:text-white;
+    @apply btn hover:bg-zinc-100 dark:hover:bg-white/5 text-zinc-600 dark:text-zinc-400 
+           hover:text-zinc-900 dark:hover:text-white;
   }
 
   .btn-danger {
-    @apply btn bg-red-600 hover:bg-red-500 text-white;
+    @apply btn bg-red-600 hover:bg-red-500 text-white shadow-md active:scale-[0.98];
   }
 
   .card {
-    @apply bg-zinc-900 border border-zinc-800 rounded-2xl;
+    @apply bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl
+           shadow-sm transition-colors duration-300;
   }
 
   .card-hover {
-    @apply card hover:border-zinc-700 hover:shadow-card-hover transition-all duration-200 cursor-pointer;
+    @apply card hover:border-zinc-300 dark:hover:border-zinc-700 hover:shadow-lg 
+           transition-all duration-200 cursor-pointer;
   }
 
   .input {
-    @apply w-full px-4 py-2.5 bg-zinc-800 border border-zinc-700 rounded-xl text-white
-           placeholder-zinc-500 text-sm transition-all duration-200
-           focus:outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500/50
+    @apply w-full px-4 py-2.5 bg-white dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-700 
+           rounded-xl text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-zinc-500 
+           text-sm transition-all duration-200
+           focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20
            disabled:opacity-50 disabled:cursor-not-allowed;
   }
 
   .label {
-    @apply text-sm font-medium text-zinc-300 mb-1.5 block;
+    @apply text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1.5 block;
   }
 
   .badge {
@@ -105,23 +132,27 @@ body {
 
   .kbd {
     @apply inline-flex items-center px-1.5 py-0.5 rounded-md text-xs font-mono
-           bg-zinc-800 border border-zinc-700 text-zinc-400;
+           bg-zinc-200 dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-700 
+           text-zinc-600 dark:text-zinc-400;
   }
 
   .skeleton {
-    @apply bg-zinc-800 rounded-lg animate-shimmer;
-    background-image: linear-gradient(90deg, transparent 25%, rgba(255,255,255,0.05) 50%, transparent 75%);
+    @apply bg-zinc-200 dark:bg-zinc-800 rounded-lg animate-shimmer;
+    background-image: linear-gradient(90deg, transparent 25%, rgba(255,255,255,0.1) 50%, transparent 75%);
     background-size: 200% 100%;
   }
 
   .sidebar-item {
-    @apply flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium
-           text-zinc-400 hover:text-white hover:bg-white/5 transition-all duration-150
+    @apply flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium
+           text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white 
+           hover:bg-zinc-100 dark:hover:bg-white/5 transition-all duration-150
            cursor-pointer select-none;
   }
 
   .sidebar-item-active {
-    @apply sidebar-item bg-primary-600/15 text-primary-400 hover:bg-primary-600/20 hover:text-primary-300;
+    @apply sidebar-item bg-primary-50 dark:bg-primary-600/15 text-primary-600 dark:text-primary-400 
+           hover:bg-primary-100 dark:hover:bg-primary-600/20 hover:text-primary-700 dark:hover:text-primary-300
+           shadow-sm;
   }
 
   /* Priority badges */

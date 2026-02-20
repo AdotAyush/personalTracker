@@ -17,7 +17,7 @@ export default function Layout() {
   const sidebarOpen = useSelector(selectSidebarOpen);
 
   return (
-    <div className="flex h-screen bg-zinc-950 overflow-hidden">
+    <div className="flex h-screen bg-zinc-50 dark:bg-zinc-950 overflow-hidden transition-colors duration-300">
       {/* Sidebar */}
       <Sidebar />
 
@@ -27,9 +27,11 @@ export default function Layout() {
         sidebarOpen ? 'ml-0 md:ml-64' : 'ml-0'
       )}>
         <Header />
-        <main className="flex-1 overflow-y-auto p-4 md:p-6">
+        <main className="flex-1 overflow-y-auto p-3 md:p-6 lg:p-8">
           <ErrorBoundary>
-            <Outlet />
+            <div className="max-w-[1600px] mx-auto">
+              <Outlet />
+            </div>
           </ErrorBoundary>
         </main>
       </div>

@@ -117,21 +117,21 @@ export default function CalendarPage() {
     onSuccess: () => { queryClient.invalidateQueries(['calendar']); toast.success('Event deleted'); },
   });
 
-  const events = data?.data || [];
+  const events = Array.isArray(data?.data) ? data.data : [];
 
   const getEventsForDay = (day) =>
-    events.filter(e => isSameDay(parseISO(e.startDate), day));
+    events.filter(e => e.startDate && isSameDay(parseISO(e.startDate), day));
 
   const dayEvents = selectedDay ? getEventsForDay(selectedDay) : [];
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
         <div>
-          <h1 className="text-xl font-bold text-white">Calendar</h1>
-          <p className="text-zinc-500 text-sm mt-0.5">{format(currentMonth, 'MMMM yyyy')}</p>
+          <h1 className="text-xl font-bold text-zinc-900 dark:text-white">Calendar</h1>
+          <p className="text-zinc-600 dark:text-zinc-400 text-sm mt-0.5">{format(currentMonth, 'MMMM yyyy')}</p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap">
           <button onClick={() => setCurrentMonth(m => subMonths(m, 1))} className="btn btn-ghost p-2">
             <ChevronLeftIcon className="w-4 h-4" />
           </button>
@@ -142,7 +142,7 @@ export default function CalendarPage() {
             <ChevronRightIcon className="w-4 h-4" />
           </button>
           <button onClick={() => setShowForm(true)} className="btn btn-primary gap-2">
-            <PlusIcon className="w-4 h-4" /> New Event
+            <PlusIcon className="w-4 h-4" /> <span className="hidden sm:inline">New Event</span>
           </button>
         </div>
       </div>
@@ -152,7 +152,7 @@ export default function CalendarPage() {
         <div className="lg:col-span-2 card p-4">
           <div className="grid grid-cols-7 mb-2">
             {['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map(d => (
-              <div key={d} className="text-center text-xs font-medium text-zinc-500 py-1">{d}</div>
+              <div key={d} className="text-center text-xs font-medium text-zinc-500 dark:text-zinc-400 py-1">{d}</div>
             ))}
           </div>
           <div className="grid grid-cols-7 gap-px">
@@ -164,13 +164,13 @@ export default function CalendarPage() {
                   key={day.toISOString()}
                   onClick={() => setSelectedDay(day)}
                   className={`min-h-[72px] p-1 rounded-lg cursor-pointer transition-colors ${
-                    isToday(day) ? 'bg-primary-600/10' : 'hover:bg-zinc-800/50'
-                  } ${isSelected ? 'ring-1 ring-primary-500' : ''} ${
+                    isToday(day) ? 'bg-primary-100 dark:bg-primary-600/10' : 'hover:bg-zinc-100 dark:hover:bg-zinc-800/50'
+                  } ${isSelected ? 'ring-2 ring-primary-500' : ''} ${
                     !isSameMonth(day, currentMonth) ? 'opacity-30' : ''
                   }`}
                 >
                   <span className={`text-xs font-medium inline-flex w-6 h-6 items-center justify-center rounded-full ${
-                    isToday(day) ? 'bg-primary-600 text-white' : 'text-zinc-300'
+                    isToday(day) ? 'bg-primary-600 text-white' : 'text-zinc-700 dark:text-zinc-300'
                   }`}>
                     {format(day, 'd')}
                   </span>
@@ -192,11 +192,11 @@ export default function CalendarPage() {
 
         {/* Day detail panel */}
         <div className="card p-4">
-          <h3 className="font-semibold text-white mb-3">
+          <h3 className="font-semibold text-zinc-900 dark:text-white mb-3">
             {selectedDay ? format(selectedDay, 'EEEE, MMM d') : 'Select a day'}
           </h3>
           {dayEvents.length === 0 ? (
-            <div className="text-center py-8 text-zinc-600">
+            <div className="text-center py-8 text-zinc-500 dark:text-zinc-600">
               <CalendarIcon className="w-8 h-8 mx-auto mb-2 opacity-30" />
               <p className="text-sm">No events</p>
               <button onClick={() => setShowForm(true)} className="btn btn-ghost text-xs mt-2">
@@ -211,13 +211,13 @@ export default function CalendarPage() {
                     key={event._id}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    className={`p-3 rounded-lg ${COLOR_BG[event.color] || 'bg-zinc-800'}/10 border border-${event.color || 'zinc'}-700/30 group`}
+                    className={`p-3 rounded-lg bg-zinc-100 dark:bg-${event.color || 'zinc'}-900/10 border border-zinc-200 dark:border-${event.color || 'zinc'}-700/30 group`}
                   >
                     <div className="flex items-start justify-between">
                       <div>
-                        <p className="text-sm font-medium text-white">{event.title}</p>
+                        <p className="text-sm font-medium text-zinc-900 dark:text-white">{event.title}</p>
                         {event.startDate && (
-                          <p className="text-xs text-zinc-400 flex items-center gap-1 mt-0.5">
+                          <p className="text-xs text-zinc-600 dark:text-zinc-400 flex items-center gap-1 mt-0.5">
                             <ClockIcon className="w-3 h-3" />
                             {format(parseISO(event.startDate), 'h:mm a')}
                           </p>
@@ -225,7 +225,7 @@ export default function CalendarPage() {
                       </div>
                       <button
                         onClick={() => deleteMutation.mutate(event._id)}
-                        className="opacity-0 group-hover:opacity-100 text-zinc-500 hover:text-red-400"
+                        className="opacity-0 group-hover:opacity-100 text-zinc-400 dark:text-zinc-500 hover:text-red-500 dark:hover:text-red-400"
                       >
                         <XIcon className="w-3.5 h-3.5" />
                       </button>

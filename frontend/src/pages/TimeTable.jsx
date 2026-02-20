@@ -63,7 +63,7 @@ export default function TimeTablePage() {
     },
   });
 
-  const tables = data?.data || [];
+  const tables = Array.isArray(data?.data) ? data.data : [];
 
   return (
     <div className="flex gap-4 h-full">
@@ -77,13 +77,13 @@ export default function TimeTablePage() {
         </button>
 
         {tables.length === 0 ? (
-          <p className="text-xs text-zinc-600 text-center py-4">No tables yet</p>
+          <p className="text-xs text-zinc-500 dark:text-zinc-500 text-center py-4">No tables yet</p>
         ) : (
           tables.map(t => (
             <div
               key={t._id}
               className={`group flex items-center gap-2 px-3 py-2 rounded-lg cursor-pointer text-sm transition-colors ${
-                activeId === t._id ? 'bg-primary-600/20 text-primary-400' : 'text-zinc-400 hover:bg-zinc-800'
+                activeId === t._id ? 'bg-primary-100 dark:bg-primary-600/20 text-primary-700 dark:text-primary-400' : 'text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800'
               }`}
               onClick={() => setActiveId(t._id)}
             >
@@ -91,7 +91,7 @@ export default function TimeTablePage() {
               <span className="flex-1 truncate">{t.name}</span>
               <button
                 onClick={(e) => { e.stopPropagation(); deleteMutation.mutate(t._id); }}
-                className="opacity-0 group-hover:opacity-100 text-zinc-600 hover:text-red-400"
+                className="opacity-0 group-hover:opacity-100 text-zinc-400 dark:text-zinc-600 hover:text-red-500 dark:hover:text-red-400"
               >
                 <TrashIcon className="w-3.5 h-3.5" />
               </button>

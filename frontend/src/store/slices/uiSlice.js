@@ -20,7 +20,19 @@ const uiSlice = createSlice({
     setTheme(state, { payload }) {
       state.theme = payload;
       localStorage.setItem('pt_theme', payload);
-      document.documentElement.classList.toggle('dark', payload === 'dark');
+      const root = document.documentElement;
+      if (payload === 'dark') {
+        root.classList.add('dark');
+        root.classList.remove('light');
+      } else if (payload === 'light') {
+        root.classList.remove('dark');
+        root.classList.add('light');
+      } else {
+        // System preference
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        root.classList.toggle('dark', prefersDark);
+        root.classList.toggle('light', !prefersDark);
+      }
     },
     toggleFocusMode(state) { state.focusMode = !state.focusMode; },
     setFocusMode(state, { payload }) { state.focusMode = payload; },

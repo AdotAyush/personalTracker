@@ -182,7 +182,7 @@ export default function HabitTracker() {
     enabled: Boolean(heatmapHabit),
   });
 
-  const habits = habitsData?.data || [];
+  const habits = Array.isArray(habitsData?.data) ? habitsData.data : [];
   const today  = todayData?.data  || {};
 
   const handleEdit  = (habit) => { setEditingHabit(habit); setFormOpen(true); };
@@ -210,10 +210,10 @@ export default function HabitTracker() {
 
       {/* Header */}
       <div className="flex items-center justify-between">
-        <h2 className="text-lg font-semibold text-white">Your Habits</h2>
+        <h2 className="text-lg font-semibold text-zinc-900 dark:text-white">Your Habits</h2>
         <button onClick={() => setFormOpen(true)} className="btn btn-primary gap-2">
           <PlusIcon className="w-4 h-4" />
-          New Habit
+          <span className="hidden sm:inline">New Habit</span>
         </button>
       </div>
 
@@ -223,9 +223,9 @@ export default function HabitTracker() {
           {[1, 2, 3, 4].map(i => <SkeletonCard key={i} />)}
         </div>
       ) : habits.length === 0 ? (
-        <div className="text-center py-16 text-zinc-500">
+        <div className="text-center py-16 text-zinc-500 dark:text-zinc-400">
           <FlameIcon className="w-12 h-12 mx-auto mb-3 opacity-30" />
-          <p className="text-lg font-medium">No habits yet</p>
+          <p className="text-lg font-medium text-zinc-700 dark:text-zinc-300">No habits yet</p>
           <p className="text-sm mt-1">Start building positive habits today</p>
           <button onClick={() => setFormOpen(true)} className="btn btn-primary mt-4 gap-2">
             <PlusIcon className="w-4 h-4" /> Create First Habit
