@@ -37,7 +37,7 @@ export default function Modal({ isOpen, onClose, title, children, size = 'md', c
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="absolute inset-0 bg-black/70 backdrop-blur-sm"
+            className="absolute inset-0 bg-gradient-to-br from-zinc-900/95 via-black/90 to-zinc-950/95 backdrop-blur-md"
             onClick={onClose}
           />
 
@@ -65,7 +65,7 @@ export default function Modal({ isOpen, onClose, title, children, size = 'md', c
             )}
 
             {/* Content */}
-            <div className="flex-1 overflow-y-auto">
+            <div className="flex-1 overflow-y-auto p-6">
               {children}
             </div>
           </motion.div>

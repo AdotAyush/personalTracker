@@ -140,7 +140,7 @@ export default function KanbanBoard() {
       <TaskForm 
         isOpen={formOpen} 
         onClose={handleCloseForm} 
-        task={{ status: defaultStatus }} 
+        task={formOpen ? { status: defaultStatus } : null} 
       />
     </>
   );

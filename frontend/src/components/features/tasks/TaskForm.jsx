@@ -23,13 +23,14 @@ const defaultForm = {
 
 export default function TaskForm({ isOpen, onClose, task = null }) {
   const queryClient = useQueryClient();
-  const isEditing = Boolean(task);
+  const isEditing = Boolean(task && task._id);
   const [form, setForm] = useState(defaultForm);
   const [tagInput, setTagInput] = useState('');
   const [subtaskInput, setSubtaskInput] = useState('');
 
   useEffect(() => {
-    if (task) {
+    if (task && task._id) {
+      // Editing existing task
       setForm({
         title: task.title || '',
         description: task.description || '',
@@ -41,13 +42,17 @@ export default function TaskForm({ isOpen, onClose, task = null }) {
         subtasks: task.subtasks?.map(s => ({ title: s.title, isCompleted: s.isCompleted })) || [],
         pomodoroEstimate: task.pomodoroEstimate || 1,
       });
+    } else if (task && task.status) {
+      // New task with default status from Kanban column
+      setForm({ ...defaultForm, status: task.status });
     } else {
+      // New task with default values
       setForm(defaultForm);
     }
   }, [task, isOpen]);
 
   const mutation = useMutation({
-    mutationFn: (data) => isEditing
+    mutationFn: (data) => (isEditing && task?._id)
       ? taskService.updateTask(task._id, data)
       : taskService.createTask(data),
     onSuccess: () => {
@@ -101,7 +106,7 @@ export default function TaskForm({ isOpen, onClose, task = null }) {
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={isEditing ? 'Edit Task' : 'New Task'} size="lg">
-      <form onSubmit={handleSubmit} className="space-y-5">
+      <form onSubmit={handleSubmit} className="space-y-4">
         {/* Title */}
         <div>
           <label className="label">Title *</label>
@@ -218,17 +223,17 @@ export default function TaskForm({ isOpen, onClose, task = null }) {
           <label className="label">Subtasks</label>
           <div className="space-y-2 mb-2">
             {form.subtasks.map((s, i) => (
-              <div key={i} className="flex items-center gap-2 p-2 bg-zinc-800/50 rounded-lg">
+              <div key={i} className="flex items-center gap-2 p-2 bg-zinc-100 dark:bg-zinc-800/50 rounded-lg">
                 <input
                   type="checkbox"
                   checked={s.isCompleted}
                   onChange={() => toggleSubtask(i)}
-                  className="rounded border-zinc-600 text-primary-500 bg-zinc-800 focus:ring-primary-500"
+                  className="rounded border-zinc-300 dark:border-zinc-600 text-primary-500 bg-white dark:bg-zinc-800 focus:ring-primary-500"
                 />
-                <span className={`flex-1 text-sm ${s.isCompleted ? 'line-through text-zinc-500' : 'text-zinc-200'}`}>
+                <span className={`flex-1 text-sm ${s.isCompleted ? 'line-through text-zinc-500 dark:text-zinc-500' : 'text-zinc-900 dark:text-zinc-200'}`}>
                   {s.title}
                 </span>
-                <button type="button" onClick={() => removeSubtask(i)} className="text-zinc-500 hover:text-red-400">
+                <button type="button" onClick={() => removeSubtask(i)} className="text-zinc-500 dark:text-zinc-500 hover:text-red-500 dark:hover:text-red-400">
                   <TrashIcon className="w-3.5 h-3.5" />
                 </button>
               </div>
@@ -249,7 +254,7 @@ export default function TaskForm({ isOpen, onClose, task = null }) {
         </div>
 
         {/* Actions */}
-        <div className="flex justify-end gap-3 pt-2 border-t border-zinc-800">
+        <div className="flex justify-end gap-3 pt-4 border-t border-zinc-200 dark:border-zinc-800">
           <button type="button" onClick={onClose} className="btn btn-ghost">Cancel</button>
           <button type="submit" className="btn btn-primary" disabled={mutation.isPending}>
             {mutation.isPending ? 'Saving...' : isEditing ? 'Update Task' : 'Create Task'}
