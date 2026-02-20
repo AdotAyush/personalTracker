@@ -33,7 +33,7 @@ export default function TaskCard({ task, compact = false, onClick }) {
       status: task.status === 'done' ? 'todo' : 'done',
     }),
     onSuccess: () => {
-      queryClient.invalidateQueries(['tasks']);
+      queryClient.invalidateQueries({ queryKey: ['tasks'] });
       if (task.status !== 'done') toast.success('Task completed! 🎉');
     },
     onError: () => toast.error('Failed to update task'),
@@ -42,7 +42,7 @@ export default function TaskCard({ task, compact = false, onClick }) {
   const deleteMutation = useMutation({
     mutationFn: () => taskService.deleteTask(task._id),
     onSuccess: () => {
-      queryClient.invalidateQueries(['tasks']);
+      queryClient.invalidateQueries({ queryKey: ['tasks'] });
       toast.success('Task deleted');
     },
   });

@@ -97,7 +97,7 @@ export default function KanbanBoard() {
     mutationFn: (tasks) => taskService.reorderTasks(tasks),
     onError: () => {
       toast.error('Failed to save task order');
-      queryClient.invalidateQueries(['tasks', 'kanban']);
+      queryClient.invalidateQueries({ queryKey: ['tasks'] });
     },
   });
 

@@ -14,7 +14,7 @@ const ICONS    = ['✨', '💪', '📚', '🏃', '🧘', '💧', '🥗', '😴',
 const FREQS    = ['daily', 'weekly', 'custom'];
 
 const defaultHabit = {
-  name: '', description: '', icon: '✨', color: 'indigo',
+  title: '', description: '', icon: '✨', color: 'indigo',
   frequency: 'daily', targetDays: [0, 1, 2, 3, 4, 5, 6],
   targetValue: 1, unit: '',
 };
@@ -66,8 +66,8 @@ function HabitFormModal({ isOpen, onClose, habit = null }) {
             <input
               className="input"
               placeholder="e.g. Read for 30 minutes"
-              value={form.name}
-              onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
+              value={form.title}
+              onChange={e => setForm(f => ({ ...f, title: e.target.value }))}
               autoFocus
             />
           </div>

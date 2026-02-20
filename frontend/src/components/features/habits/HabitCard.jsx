@@ -58,7 +58,7 @@ export default function HabitCard({ habit, onClick }) {
           <div className="flex items-center gap-2">
             <span className="text-xl">{habit.icon || '✨'}</span>
             <div>
-              <h3 className="font-semibold text-zinc-900 dark:text-white text-sm leading-tight truncate">{habit.name}</h3>
+              <h3 className="font-semibold text-zinc-900 dark:text-white text-sm leading-tight truncate">{habit.title}</h3>
               <p className="text-xs text-zinc-600 dark:text-zinc-500 mt-0.5">
                 {FREQUENCY_LABELS[habit.frequency]}
                 {habit.targetValue && ` · ${habit.targetValue} ${habit.unit || ''}`}
