@@ -2,17 +2,17 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { EyeIcon, EyeOffIcon, ZapIcon } from 'lucide-react';
-import useAuth from '../../hooks/useAuth';
+import useAuth from '../hooks/useAuth';
 
 export default function Register() {
-  const { registerMutation } = useAuth();
+  const { register, isRegisterLoading } = useAuth();
   const [form, setForm]         = useState({ name: '', email: '', password: '', confirmPassword: '' });
   const [showPass, setShowPass] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (form.password !== form.confirmPassword) return;
-    registerMutation.mutate(form);
+    register(form);
   };
 
   return (
@@ -95,9 +95,9 @@ export default function Register() {
             <button
               type="submit"
               className="btn btn-primary w-full"
-              disabled={registerMutation.isPending || form.password !== form.confirmPassword}
+              disabled={isRegisterLoading || form.password !== form.confirmPassword}
             >
-              {registerMutation.isPending ? 'Creating account...' : 'Create Account'}
+              {isRegisterLoading ? 'Creating account...' : 'Create Account'}
             </button>
           </form>
 

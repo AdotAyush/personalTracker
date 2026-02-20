@@ -2,16 +2,16 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { EyeIcon, EyeOffIcon, ZapIcon } from 'lucide-react';
-import useAuth from '../../hooks/useAuth';
+import useAuth from '../hooks/useAuth';
 
 export default function Login() {
-  const { loginMutation } = useAuth();
+  const { login, isLoginLoading } = useAuth();
   const [form, setForm]         = useState({ email: '', password: '' });
   const [showPass, setShowPass] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    loginMutation.mutate(form);
+    login(form);
   };
 
   return (
@@ -74,9 +74,9 @@ export default function Login() {
             <button
               type="submit"
               className="btn btn-primary w-full"
-              disabled={loginMutation.isPending}
+              disabled={isLoginLoading}
             >
-              {loginMutation.isPending ? 'Signing in...' : 'Sign In'}
+              {isLoginLoading ? 'Signing in...' : 'Sign In'}
             </button>
           </form>
 

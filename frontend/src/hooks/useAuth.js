@@ -6,7 +6,7 @@ import { setCredentials, logout as logoutAction, updateUser } from '../store/sli
 import { authService } from '../services';
 import { selectCurrentUser, selectIsAuthenticated } from '../store/slices/authSlice';
 
-export const useAuth = () => {
+const useAuth = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const user = useSelector(selectCurrentUser);
@@ -64,3 +64,5 @@ export const useAuth = () => {
     refetchMe,
   };
 };
+
+export default useAuth;
