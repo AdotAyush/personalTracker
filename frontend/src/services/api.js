@@ -2,7 +2,17 @@ import axios from 'axios';
 import { store } from '../store';
 import { updateAccessToken, logout } from '../store/slices/authSlice';
 
-const BASE_URL = import.meta.env.VITE_API_URL || '/api/v1';
+// Construct BASE_URL - ensure /api/v1 is always appended
+const getBaseUrl = () => {
+  const apiUrl = import.meta.env.VITE_API_URL || '/';
+  // If VITE_API_URL is set and doesn't end with /api/v1, append it
+  if (apiUrl && apiUrl !== '/') {
+    return apiUrl.endsWith('/api/v1') ? apiUrl : `${apiUrl}/api/v1`;
+  }
+  return '/api/v1';
+};
+
+const BASE_URL = getBaseUrl();
 
 const api = axios.create({
   baseURL: BASE_URL,

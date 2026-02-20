@@ -90,7 +90,7 @@ export default function Login() {
           </div>
 
           <a
-            href={`${import.meta.env.VITE_API_URL || ''}/api/v1/auth/google`}
+            href={`${import.meta.env.VITE_API_URL ? `${import.meta.env.VITE_API_URL}/api/v1` : '/api/v1'}/auth/google`}
             className="btn btn-secondary w-full gap-2 justify-center"
           >
             <svg className="w-4 h-4" viewBox="0 0 24 24">
