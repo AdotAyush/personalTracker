@@ -63,7 +63,7 @@ export default function TimeTablePage() {
     },
   });
 
-  const tables = Array.isArray(data?.data) ? data.data : [];
+  const tables = Array.isArray(data?.data?.tables) ? data.data.tables : [];
 
   return (
     <div className="flex gap-4 h-full">

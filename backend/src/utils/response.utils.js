@@ -20,11 +20,11 @@ const sendPaginated = (res, { data, total, page, limit, message = 'Success' } = 
   return res.status(200).json({
     success: true,
     message,
-    data,
-    pagination: {
+    data: {
+      ...data,
       total,
-      page: parseInt(page),
-      pages,
+      totalPages: pages,
+      currentPage: parseInt(page),
       limit: parseInt(limit),
       hasNextPage: page < pages,
       hasPrevPage: page > 1,

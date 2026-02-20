@@ -4,7 +4,7 @@ const { sendSuccess, sendCreated, sendPaginated, sendNotFound } = require('../ut
 
 const getTasks = asyncHandler(async (req, res) => {
   const { tasks, total, page, limit } = await taskService.getTasks(req.user._id, req.query);
-  return sendPaginated(res, { data: tasks, total, page, limit });
+  return sendPaginated(res, { data: { tasks }, total, page, limit });
 });
 
 const getKanbanTasks = asyncHandler(async (req, res) => {

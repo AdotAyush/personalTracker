@@ -26,7 +26,7 @@ const updateEvent = asyncHandler(async (req, res) => {
     { new: true, runValidators: true }
   );
   if (!event) return sendNotFound(res, 'Event');
-  return sendSuccess(res, { data: event });
+  return sendSuccess(res, { data: event, message: 'Event updated successfully' });
 });
 
 const deleteEvent = asyncHandler(async (req, res) => {

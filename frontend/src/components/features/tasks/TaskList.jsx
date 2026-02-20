@@ -47,8 +47,8 @@ export default function TaskList() {
   });
 
   const tasks      = data?.data?.tasks       || [];
-  const totalPages = data?.data?.totalPages   || 1;
-  const total      = data?.data?.total        || 0;
+  const totalPages = data?.data?.totalPages  || 1;
+  const total      = data?.data?.total       || 0;
 
   const handleEdit = (task) => { setEditingTask(task); setFormOpen(true); };
   const handleClose = () => { setFormOpen(false); setEditingTask(null); };

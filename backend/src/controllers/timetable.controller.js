@@ -10,7 +10,7 @@ const getTimetables = asyncHandler(async (req, res) => {
     TimeTable.find(filter, '-rows').sort({ updatedAt: -1 }).skip(skip).limit(limit).lean(),
     TimeTable.countDocuments(filter),
   ]);
-  return sendPaginated(res, { data: tables, total, page, limit });
+  return sendPaginated(res, { data: { tables }, total, page, limit });
 });
 
 const getTimetableById = asyncHandler(async (req, res) => {
@@ -50,7 +50,7 @@ const addColumn = asyncHandler(async (req, res) => {
     { new: true }
   );
   if (!table) return sendNotFound(res, 'TimeTable');
-  return sendSuccess(res, { data: table, message: 'Column added' });
+  return sendSuccess(res, { data: table, message: 'Column added successfully' });
 });
 
 const updateColumn = asyncHandler(async (req, res) => {
@@ -61,7 +61,7 @@ const updateColumn = asyncHandler(async (req, res) => {
   if (!col) return sendNotFound(res, 'Column');
   Object.assign(col, req.body);
   await table.save();
-  return sendSuccess(res, { data: table });
+  return sendSuccess(res, { data: table, message: 'Column updated successfully' });
 });
 
 const deleteColumn = asyncHandler(async (req, res) => {
@@ -72,7 +72,7 @@ const deleteColumn = asyncHandler(async (req, res) => {
     { new: true }
   );
   if (!table) return sendNotFound(res, 'TimeTable');
-  return sendSuccess(res, { data: table });
+  return sendSuccess(res, { data: table, message: 'Column deleted successfully' });
 });
 
 const reorderColumns = asyncHandler(async (req, res) => {
@@ -85,19 +85,19 @@ const reorderColumns = asyncHandler(async (req, res) => {
   });
   table.columnDefs.sort((a, b) => a.order - b.order);
   await table.save();
-  return sendSuccess(res, { data: table });
+  return sendSuccess(res, { data: table, message: 'Columns reordered successfully' });
 });
 
 // ─── Row Operations ──────────────────────────────────────────────────────────
 const addRow = asyncHandler(async (req, res) => {
   const table = await TimeTable.findOneAndUpdate(
     { _id: req.params.id, userId: req.user._id },
-    { $push: { rows: { data: req.body.data || {}, order: req.body.order || 0 } } },
+    { $push: { rows: { data: req.body.data || req.body.cells || {}, order: req.body.order || 0 } } },
     { new: true }
   );
   if (!table) return sendNotFound(res, 'TimeTable');
   const newRow = table.rows[table.rows.length - 1];
-  return sendCreated(res, { data: newRow });
+  return sendCreated(res, { data: newRow, message: 'Row added successfully' });
 });
 
 const updateRow = asyncHandler(async (req, res) => {
@@ -106,10 +106,12 @@ const updateRow = asyncHandler(async (req, res) => {
   if (!table) return sendNotFound(res, 'TimeTable');
   const row = table.rows.id(rowId);
   if (!row) return sendNotFound(res, 'Row');
-  if (req.body.data) Object.assign(row.data, req.body.data);
+  // Support both 'data' and 'cells' for backwards compatibility
+  const updateData = req.body.data || req.body.cells;
+  if (updateData) Object.assign(row.data, updateData);
   if (req.body.order !== undefined) row.order = req.body.order;
   await table.save();
-  return sendSuccess(res, { data: row });
+  return sendSuccess(res, { data: row, message: 'Row updated successfully' });
 });
 
 const deleteRow = asyncHandler(async (req, res) => {
@@ -119,7 +121,7 @@ const deleteRow = asyncHandler(async (req, res) => {
     { new: true }
   );
   if (!table) return sendNotFound(res, 'TimeTable');
-  return sendSuccess(res, { message: 'Row deleted' });
+  return sendSuccess(res, { message: 'Row deleted successfully' });
 });
 
 module.exports = {

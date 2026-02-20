@@ -31,9 +31,19 @@ class TaskService {
     const { page, limit, skip } = getPaginationParams(query);
     const filter = this.buildFilter(userId, query);
 
-    const sortField = query.sortBy || 'createdAt';
-    const sortOrder = query.sortOrder === 'asc' ? 1 : -1;
-    const sort = { [sortField]: sortOrder };
+    // Better sort parsing - handles both 'sortBy' and 'sort' params
+    let sort = { createdAt: -1 }; // default sort
+    if (query.sort) {
+      const sortStr = query.sort;
+      if (sortStr.startsWith('-')) {
+        sort = { [sortStr.substring(1)]: -1 };
+      } else {
+        sort = { [sortStr]: 1 };
+      }
+    } else if (query.sortBy) {
+      const sortOrder = query.sortOrder === 'asc' ? 1 : -1;
+      sort = { [query.sortBy]: sortOrder };
+    }
 
     const [tasks, total] = await Promise.all([
       Task.find(filter).sort(sort).skip(skip).limit(limit).lean(),
