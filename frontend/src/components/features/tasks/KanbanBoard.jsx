@@ -1,6 +1,6 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   DndContext, DragOverlay, PointerSensor, useSensor, useSensors,
   closestCorners, defaultDropAnimation,
@@ -12,7 +12,7 @@ import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
 import clsx from 'clsx';
 import { PlusIcon, GripVerticalIcon } from 'lucide-react';
-import { moveTaskInKanban, selectKanbanColumns } from '../../../store/slices/taskSlice';
+import { moveTaskInKanban, selectKanbanColumns, setKanbanColumns } from '../../../store/slices/taskSlice';
 import { taskService } from '../../../services';
 import TaskCard from './TaskCard';
 import TaskForm from './TaskForm';
@@ -78,6 +78,26 @@ export default function KanbanBoard() {
   const columns = useSelector(selectKanbanColumns);
   const [formOpen, setFormOpen] = useState(false);
   const [defaultStatus, setDefaultStatus] = useState('todo');
+
+  // Fetch all tasks for kanban view
+  const { data: tasksData } = useQuery({
+    queryKey: ['tasks', 'kanban'],
+    queryFn: () => taskService.getTasks({ limit: 1000 }),
+  });
+
+  // Update Redux store when tasks are fetched
+  useEffect(() => {
+    if (tasksData?.data?.tasks) {
+      const tasks = tasksData.data.tasks;
+      const grouped = {
+        todo: tasks.filter(t => t.status === 'todo'),
+        in_progress: tasks.filter(t => t.status === 'in_progress'),
+        done: tasks.filter(t => t.status === 'done'),
+        cancelled: tasks.filter(t => t.status === 'cancelled'),
+      };
+      dispatch(setKanbanColumns(grouped));
+    }
+  }, [tasksData, dispatch]);
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } })

@@ -42,7 +42,7 @@ const notifySubscribers = (token) => {
 };
 
 api.interceptors.response.use(
-  (response) => response,
+  (response) => response.data,  // Return just the data portion
   async (error) => {
     const originalRequest = error.config;
 
@@ -61,7 +61,7 @@ api.interceptors.response.use(
 
       try {
         const { data } = await axios.post(`${BASE_URL}/auth/refresh`, {}, { withCredentials: true });
-        const newToken = data.data.accessToken;
+        const newToken = data?.data?.accessToken || data?.accessToken;
         store.dispatch(updateAccessToken(newToken));
         notifySubscribers(newToken);
         originalRequest.headers.Authorization = `Bearer ${newToken}`;
