@@ -72,11 +72,11 @@ export default function TaskCard({ task, compact = false, onClick }) {
         {/* Complete toggle */}
         <button
           onClick={(e) => { e.stopPropagation(); toggleMutation.mutate(); }}
-          className="flex-shrink-0 mt-0.5 text-zinc-500 hover:text-primary-400 transition-colors"
+          className="flex-shrink-0 mt-0.5 text-zinc-500 dark:text-zinc-500 hover:text-primary-500 dark:hover:text-primary-400 transition-colors"
           disabled={toggleMutation.isPending}
         >
           {isDone
-            ? <CheckCircleIcon className="w-5 h-5 text-green-500" />
+            ? <CheckCircleIcon className="w-5 h-5 text-emerald-600 dark:text-green-500" />
             : <CircleIcon className="w-5 h-5" />
           }
         </button>
@@ -84,15 +84,15 @@ export default function TaskCard({ task, compact = false, onClick }) {
         <div className="flex-1 min-w-0">
           {/* Title */}
           <p className={clsx(
-            'text-sm font-medium text-white leading-snug',
-            isDone && 'line-through text-zinc-500'
+            'text-sm font-medium text-zinc-900 dark:text-white leading-snug',
+            isDone && 'line-through text-zinc-500 dark:text-zinc-500'
           )}>
             {task.title}
           </p>
 
           {/* Description (non-compact) */}
           {!compact && task.description && (
-            <p className="text-xs text-zinc-500 mt-1 line-clamp-2">{task.description}</p>
+            <p className="text-xs text-zinc-600 dark:text-zinc-500 mt-1 line-clamp-2">{task.description}</p>
           )}
 
           {/* Meta row */}

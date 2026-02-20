@@ -58,8 +58,8 @@ export default function HabitCard({ habit, onClick }) {
           <div className="flex items-center gap-2">
             <span className="text-xl">{habit.icon || '✨'}</span>
             <div>
-              <h3 className="font-semibold text-white text-sm leading-tight truncate">{habit.name}</h3>
-              <p className="text-xs text-zinc-500 mt-0.5">
+              <h3 className="font-semibold text-zinc-900 dark:text-white text-sm leading-tight truncate">{habit.name}</h3>
+              <p className="text-xs text-zinc-600 dark:text-zinc-500 mt-0.5">
                 {FREQUENCY_LABELS[habit.frequency]}
                 {habit.targetValue && ` · ${habit.targetValue} ${habit.unit || ''}`}
               </p>
@@ -69,11 +69,11 @@ export default function HabitCard({ habit, onClick }) {
           {/* Progress ring / bar */}
           {habit.targetValue > 1 ? (
             <div className="mt-3">
-              <div className="flex justify-between text-xs text-zinc-400 mb-1">
+              <div className="flex justify-between text-xs text-zinc-600 dark:text-zinc-400 mb-1">
                 <span>{habit.todayProgress || 0} / {habit.targetValue} {habit.unit}</span>
                 <span>{Math.round(progress)}%</span>
               </div>
-              <div className="h-1.5 bg-zinc-800 rounded-full overflow-hidden">
+              <div className="h-1.5 bg-zinc-200 dark:bg-zinc-800 rounded-full overflow-hidden">
                 <motion.div
                   className={clsx('h-full rounded-full', color)}
                   initial={{ width: 0 }}
@@ -87,18 +87,18 @@ export default function HabitCard({ habit, onClick }) {
           {/* Stats row */}
           <div className="flex items-center gap-4 mt-3">
             <div className="flex items-center gap-1 text-xs">
-              <FlameIcon className={clsx('w-3.5 h-3.5', habit.currentStreak > 0 ? 'text-orange-400' : 'text-zinc-600')} />
-              <span className={habit.currentStreak > 0 ? 'text-orange-400 font-semibold' : 'text-zinc-500'}>
+              <FlameIcon className={clsx('w-3.5 h-3.5', habit.currentStreak > 0 ? 'text-orange-500 dark:text-orange-400' : 'text-zinc-400 dark:text-zinc-600')} />
+              <span className={habit.currentStreak > 0 ? 'text-orange-500 dark:text-orange-400 font-semibold' : 'text-zinc-500 dark:text-zinc-500'}>
                 {habit.currentStreak}
               </span>
-              <span className="text-zinc-500">streak</span>
+              <span className="text-zinc-500 dark:text-zinc-500">streak</span>
             </div>
-            <div className="flex items-center gap-1 text-xs text-zinc-500">
-              <TrophyIcon className="w-3.5 h-3.5 text-yellow-500/60" />
+            <div className="flex items-center gap-1 text-xs text-zinc-600 dark:text-zinc-500">
+              <TrophyIcon className="w-3.5 h-3.5 text-yellow-600 dark:text-yellow-500/60" />
               <span>Best {habit.longestStreak}</span>
             </div>
             {habit.completionRate != null && (
-              <div className="flex items-center gap-1 text-xs text-zinc-500">
+              <div className="flex items-center gap-1 text-xs text-zinc-600 dark:text-zinc-500">
                 <TargetIcon className="w-3.5 h-3.5" />
                 <span>{Math.round(habit.completionRate)}%</span>
               </div>
@@ -114,7 +114,7 @@ export default function HabitCard({ habit, onClick }) {
             'flex-shrink-0 w-10 h-10 rounded-full border-2 flex items-center justify-center transition-all duration-200',
             isCompleted
               ? `${color} border-transparent text-white shadow-glow`
-              : 'border-zinc-600 text-zinc-500 hover:border-zinc-400'
+              : 'border-zinc-300 dark:border-zinc-600 text-zinc-500 dark:text-zinc-500 hover:border-zinc-400 dark:hover:border-zinc-400'
           )}
         >
           {isCompleted ? <CheckIcon className="w-5 h-5" /> : <CheckIcon className="w-5 h-5 opacity-0 group-hover:opacity-100" />}

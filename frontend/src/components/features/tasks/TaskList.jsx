@@ -56,12 +56,12 @@ export default function TaskList() {
   return (
     <div className="space-y-4">
       {/* Toolbar */}
-      <div className="flex flex-col sm:flex-row gap-3">
+      <div className="flex flex-col sm:flex-row gap-2 md:gap-3">
         {/* Search */}
         <div className="relative flex-1">
-          <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
+          <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400 dark:text-zinc-500" />
           <input
-            className="input pl-9"
+            className="input pl-9 w-full"
             placeholder="Search tasks..."
             value={search}
             onChange={e => { setSearch(e.target.value); setPage(1); }}
@@ -70,7 +70,7 @@ export default function TaskList() {
 
         {/* Sort */}
         <select
-          className="input w-36"
+          className="input w-full sm:w-36"
           value={sort}
           onChange={e => setSort(e.target.value)}
         >
@@ -82,16 +82,17 @@ export default function TaskList() {
         {/* Filter toggle */}
         <button
           onClick={() => setShowFilters(f => !f)}
-          className={`btn ${showFilters ? 'btn-primary' : 'btn-secondary'} gap-2`}
+          className={`btn ${showFilters ? 'btn-primary' : 'btn-secondary'} gap-2 w-full sm:w-auto`}
         >
           <FilterIcon className="w-4 h-4" />
-          Filters
+          <span className="sm:inline">Filters</span>
         </button>
 
         {/* New task */}
-        <button onClick={() => setFormOpen(true)} className="btn btn-primary gap-2">
+        <button onClick={() => setFormOpen(true)} className="btn btn-primary gap-2 w-full sm:w-auto">
           <PlusIcon className="w-4 h-4" />
-          New Task
+          <span className="hidden sm:inline">New Task</span>
+          <span className="sm:hidden">New</span>
         </button>
       </div>
 
@@ -104,11 +105,11 @@ export default function TaskList() {
             exit={{ opacity: 0, height: 0 }}
             className="overflow-hidden"
           >
-            <div className="card p-4 flex flex-wrap gap-4">
-              <div>
+            <div className="card p-4 md:p-5 flex flex-wrap gap-3 md:gap-4">
+              <div className="flex-1 min-w-[140px]">
                 <label className="label text-xs">Priority</label>
                 <select
-                  className="input text-sm py-1"
+                  className="input text-sm py-2 w-full"
                   value={filters.priority || ''}
                   onChange={e => { dispatch(setFilter({ key: 'priority', value: e.target.value })); setPage(1); }}
                 >
@@ -119,10 +120,10 @@ export default function TaskList() {
                 </select>
               </div>
 
-              <div>
+              <div className="flex-1 min-w-[140px]">
                 <label className="label text-xs">Status</label>
                 <select
-                  className="input text-sm py-1"
+                  className="input text-sm py-2 w-full"
                   value={filters.status || ''}
                   onChange={e => { dispatch(setFilter({ key: 'status', value: e.target.value })); setPage(1); }}
                 >
@@ -133,10 +134,10 @@ export default function TaskList() {
                 </select>
               </div>
 
-              <div>
+              <div className="flex-1 min-w-[140px]">
                 <label className="label text-xs">Tag</label>
                 <input
-                  className="input text-sm py-1"
+                  className="input text-sm py-2 w-full"
                   placeholder="Filter by tag..."
                   value={filters.tag || ''}
                   onChange={e => { dispatch(setFilter({ key: 'tag', value: e.target.value })); setPage(1); }}
@@ -144,7 +145,7 @@ export default function TaskList() {
               </div>
 
               <button
-                className="btn btn-ghost text-xs self-end"
+                className="btn btn-ghost text-xs self-end whitespace-nowrap"
                 onClick={() => {
                   dispatch(setFilter({ key: 'priority', value: '' }));
                   dispatch(setFilter({ key: 'status',   value: '' }));
@@ -160,11 +161,11 @@ export default function TaskList() {
       </AnimatePresence>
 
       {/* Stats bar */}
-      <div className="flex items-center gap-2 text-sm text-zinc-400">
+      <div className="flex items-center gap-2 text-sm text-zinc-600 dark:text-zinc-400">
         <CheckSquareIcon className="w-4 h-4" />
-        <span>{total} task{total !== 1 ? 's' : ''}</span>
+        <span className="font-medium">{total} task{total !== 1 ? 's' : ''}</span>
         {(filters.priority || filters.status || filters.tag || search) && (
-          <span className="badge bg-primary-600/20 text-primary-400">filtered</span>
+          <span className="badge bg-primary-100 dark:bg-primary-600/20 text-primary-700 dark:text-primary-400 border border-primary-200 dark:border-primary-500/30">filtered</span>
         )}
       </div>
 
@@ -172,11 +173,11 @@ export default function TaskList() {
       {isLoading ? (
         <SkeletonList count={6} />
       ) : tasks.length === 0 ? (
-        <div className="text-center py-16 text-zinc-500">
+        <div className="text-center py-16 text-zinc-500 dark:text-zinc-400">
           <CheckSquareIcon className="w-12 h-12 mx-auto mb-3 opacity-30" />
-          <p className="text-lg font-medium">No tasks found</p>
+          <p className="text-lg font-medium text-zinc-700 dark:text-zinc-300">No tasks found</p>
           <p className="text-sm mt-1">Create a new task to get started</p>
-          <button onClick={() => setFormOpen(true)} className="btn btn-primary mt-4">
+          <button onClick={() => setFormOpen(true)} className="btn btn-primary mt-4 gap-2">
             <PlusIcon className="w-4 h-4" />
             Create Task
           </button>
@@ -199,15 +200,17 @@ export default function TaskList() {
       {totalPages > 1 && (
         <div className="flex justify-center items-center gap-2 pt-4">
           <button
-            className="btn btn-ghost"
+            className="btn btn-ghost px-4"
             disabled={page === 1}
             onClick={() => setPage(p => p - 1)}
           >
             Previous
           </button>
-          <span className="text-sm text-zinc-400">Page {page} of {totalPages}</span>
+          <span className="text-sm text-zinc-600 dark:text-zinc-400 font-medium px-3 py-2 bg-zinc-100 dark:bg-zinc-800 rounded-lg">
+            Page {page} of {totalPages}
+          </span>
           <button
-            className="btn btn-ghost"
+            className="btn btn-ghost px-4"
             disabled={page === totalPages}
             onClick={() => setPage(p => p + 1)}
           >

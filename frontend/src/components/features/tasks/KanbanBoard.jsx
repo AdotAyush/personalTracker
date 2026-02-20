@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import {
@@ -15,6 +15,7 @@ import { PlusIcon, GripVerticalIcon } from 'lucide-react';
 import { moveTaskInKanban, selectKanbanColumns } from '../../../store/slices/taskSlice';
 import { taskService } from '../../../services';
 import TaskCard from './TaskCard';
+import TaskForm from './TaskForm';
 
 const COLUMN_CONFIG = {
   todo:        { label: '📋 To Do',        color: 'bg-zinc-700',    headerColor: 'text-zinc-300' },
@@ -41,15 +42,15 @@ function SortableTask({ task }) {
 function Column({ id, tasks, onAddTask }) {
   const config = COLUMN_CONFIG[id];
   return (
-    <div className="flex flex-col w-72 flex-shrink-0 bg-zinc-900/50 rounded-2xl border border-zinc-800 p-3">
+    <div className="flex flex-col w-72 flex-shrink-0 bg-zinc-50/50 dark:bg-zinc-900/50 rounded-2xl border border-zinc-200 dark:border-zinc-800 p-3">
       {/* Column header */}
       <div className="flex items-center justify-between mb-3 px-1">
         <div className="flex items-center gap-2">
           <div className={clsx('w-2 h-2 rounded-full', config.color)} />
           <span className={clsx('text-sm font-semibold', config.headerColor)}>{config.label}</span>
-          <span className="text-xs text-zinc-500 bg-zinc-800 px-1.5 py-0.5 rounded-full">{tasks.length}</span>
+          <span className="text-xs text-zinc-600 dark:text-zinc-500 bg-zinc-200 dark:bg-zinc-800 px-1.5 py-0.5 rounded-full">{tasks.length}</span>
         </div>
-        <button onClick={() => onAddTask(id)} className="btn-ghost p-1 rounded-lg">
+        <button onClick={() => onAddTask(id)} className="btn-ghost p-1 rounded-lg hover:bg-zinc-200 dark:hover:bg-zinc-800">
           <PlusIcon className="w-3.5 h-3.5" />
         </button>
       </div>
@@ -61,8 +62,8 @@ function Column({ id, tasks, onAddTask }) {
             <SortableTask key={task._id} task={task} />
           ))}
           {tasks.length === 0 && (
-            <div className="flex-1 flex items-center justify-center py-8 border-2 border-dashed border-zinc-800 rounded-xl">
-              <p className="text-xs text-zinc-600">Drop tasks here</p>
+            <div className="flex-1 flex items-center justify-center py-8 border-2 border-dashed border-zinc-300 dark:border-zinc-800 rounded-xl">
+              <p className="text-xs text-zinc-500 dark:text-zinc-600">Drop tasks here</p>
             </div>
           )}
         </div>
@@ -71,14 +72,26 @@ function Column({ id, tasks, onAddTask }) {
   );
 }
 
-export default function KanbanBoard({ onAddTask }) {
+export default function KanbanBoard() {
   const dispatch = useDispatch();
   const queryClient = useQueryClient();
   const columns = useSelector(selectKanbanColumns);
+  const [formOpen, setFormOpen] = useState(false);
+  const [defaultStatus, setDefaultStatus] = useState('todo');
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } })
   );
+
+  const handleAddTask = (columnId) => {
+    setDefaultStatus(columnId);
+    setFormOpen(true);
+  };
+
+  const handleCloseForm = () => {
+    setFormOpen(false);
+    setDefaultStatus('todo');
+  };
 
   const reorderMutation = useMutation({
     mutationFn: (tasks) => taskService.reorderTasks(tasks),
@@ -116,12 +129,19 @@ export default function KanbanBoard({ onAddTask }) {
   };
 
   return (
-    <DndContext sensors={sensors} collisionDetection={closestCorners} onDragEnd={handleDragEnd}>
-      <div className="flex gap-4 overflow-x-auto pb-4">
-        {Object.entries(columns).map(([colId, tasks]) => (
-          <Column key={colId} id={colId} tasks={tasks} onAddTask={onAddTask} />
-        ))}
-      </div>
-    </DndContext>
+    <>
+      <DndContext sensors={sensors} collisionDetection={closestCorners} onDragEnd={handleDragEnd}>
+        <div className="flex gap-4 overflow-x-auto pb-4">
+          {Object.entries(columns).map(([colId, tasks]) => (
+            <Column key={colId} id={colId} tasks={tasks} onAddTask={handleAddTask} />
+          ))}
+        </div>
+      </DndContext>
+      <TaskForm 
+        isOpen={formOpen} 
+        onClose={handleCloseForm} 
+        task={{ status: defaultStatus }} 
+      />
+    </>
   );
 }

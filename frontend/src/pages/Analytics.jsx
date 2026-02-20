@@ -10,10 +10,10 @@ import HeatmapCalendar from '../components/features/habits/HeatmapCalendar';
 const CustomTooltip = ({ active, payload, label }) => {
   if (!active || !payload?.length) return null;
   return (
-    <div className="card px-3 py-2 text-xs border border-zinc-700">
-      <p className="text-zinc-400 mb-1">{label}</p>
+    <div className="card px-3 py-2 text-xs shadow-xl">
+      <p className="text-zinc-600 dark:text-zinc-400 mb-1 font-medium">{label}</p>
       {payload.map(p => (
-        <p key={p.dataKey} style={{ color: p.color }}>{p.name}: {p.value}</p>
+        <p key={p.dataKey} style={{ color: p.color }} className="font-semibold">{p.name}: {p.value}</p>
       ))}
     </div>
   );
@@ -56,15 +56,15 @@ export default function Analytics() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-xl font-bold text-white">Analytics</h1>
-        <p className="text-zinc-500 text-sm mt-0.5">Your productivity insights</p>
+        <h1 className="text-xl md:text-2xl font-bold text-zinc-900 dark:text-white">Analytics</h1>
+        <p className="text-zinc-600 dark:text-zinc-400 text-sm mt-0.5">Your productivity insights</p>
       </div>
 
       {/* Score + stats row */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* Productivity score ring */}
         <div className="card p-5 flex flex-col items-center justify-center">
-          <p className="text-sm text-zinc-400 mb-2">Productivity Score</p>
+          <p className="text-sm text-zinc-600 dark:text-zinc-400 mb-2 font-medium">Productivity Score</p>
           <ResponsiveContainer width={140} height={140}>
             <RadialBarChart
               cx="50%" cy="50%"
@@ -75,22 +75,22 @@ export default function Analytics() {
               <RadialBar dataKey="value" cornerRadius={8} background={{ fill: '#27272a' }} />
             </RadialBarChart>
           </ResponsiveContainer>
-          <p className="text-3xl font-bold text-primary-400 -mt-20">
+          <p className="text-3xl font-bold text-primary-500 dark:text-primary-400 -mt-20">
             {analytics.productivityScore ?? '—'}%
           </p>
-          <p className="mt-14 text-xs text-zinc-500">Weekly average</p>
+          <p className="mt-14 text-xs text-zinc-500 dark:text-zinc-400">Weekly average</p>
         </div>
 
         {/* Quick stats */}
-        <div className="md:col-span-2 grid grid-cols-2 gap-4">
+        <div className="md:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
           {[
-            { label: 'Tasks Completed (Week)', value: analytics.tasksDoneWeek ?? 0,        color: 'text-blue-400' },
-            { label: 'Tasks Overdue',          value: analytics.overdueTasks ?? 0,          color: analytics.overdueTasks > 0 ? 'text-red-400' : 'text-zinc-400' },
-            { label: 'Habit Completion Rate',  value: `${Math.round(analytics.habitCompletionRate || 0)}%`, color: 'text-emerald-400' },
-            { label: 'Total Pomodoro Sessions',value: pomodoro.totalSessions ?? 0,          color: 'text-red-400' },
+            { label: 'Tasks Completed (Week)', value: analytics.tasksDoneWeek ?? 0,        color: 'text-blue-500 dark:text-blue-400' },
+            { label: 'Tasks Overdue',          value: analytics.overdueTasks ?? 0,          color: analytics.overdueTasks > 0 ? 'text-red-500 dark:text-red-400' : 'text-zinc-500 dark:text-zinc-400' },
+            { label: 'Habit Completion Rate',  value: `${Math.round(analytics.habitCompletionRate || 0)}%`, color: 'text-emerald-500 dark:text-emerald-400' },
+            { label: 'Total Pomodoro Sessions',value: pomodoro.totalSessions ?? 0,          color: 'text-red-500 dark:text-red-400' },
           ].map(({ label, value, color }) => (
             <div key={label} className="card p-4">
-              <p className="text-xs text-zinc-500">{label}</p>
+              <p className="text-xs text-zinc-600 dark:text-zinc-400 font-medium">{label}</p>
               <p className={`text-2xl font-bold mt-1 ${color}`}>{value}</p>
             </div>
           ))}
@@ -102,14 +102,14 @@ export default function Analytics() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="card p-5"
+          className="card p-5 md:p-6"
         >
-          <h2 className="font-semibold text-white mb-4">7-Day Trend</h2>
+          <h2 className="font-semibold text-zinc-900 dark:text-white mb-4">7-Day Trend</h2>
           <ResponsiveContainer width="100%" height={220}>
             <BarChart data={trend} margin={{ left: -10, right: 10 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#27272a" vertical={false} />
-              <XAxis dataKey="date" tick={{ fontSize: 11, fill: '#71717a' }} axisLine={false} tickLine={false} />
-              <YAxis tick={{ fontSize: 11, fill: '#71717a' }} axisLine={false} tickLine={false} />
+              <CartesianGrid strokeDasharray="3 3" stroke="currentColor" className="text-zinc-200 dark:text-zinc-800" vertical={false} />
+              <XAxis dataKey="date" tick={{ fontSize: 11 }} className="text-zinc-500 dark:text-zinc-400" axisLine={false} tickLine={false} />
+              <YAxis tick={{ fontSize: 11 }} className="text-zinc-500 dark:text-zinc-400" axisLine={false} tickLine={false} />
               <Tooltip content={<CustomTooltip />} />
               <Legend wrapperStyle={{ fontSize: 12 }} />
               <Bar dataKey="tasksDone"       name="Tasks Done"     fill="#6366f1" radius={[4, 4, 0, 0]} />
@@ -124,13 +124,13 @@ export default function Analytics() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="card p-5"
+          className="card p-5 md:p-6"
         >
-          <h2 className="font-semibold text-white mb-4">Tasks by Priority</h2>
+          <h2 className="font-semibold text-zinc-900 dark:text-white mb-4">Tasks by Priority</h2>
           <ResponsiveContainer width="100%" height={160}>
             <BarChart data={priorityData} layout="vertical" margin={{ left: 10, right: 30 }}>
-              <XAxis type="number" tick={{ fontSize: 11, fill: '#71717a' }} axisLine={false} tickLine={false} />
-              <YAxis type="category" dataKey="name" tick={{ fontSize: 11, fill: '#71717a' }} axisLine={false} tickLine={false} width={60} />
+              <XAxis type="number" tick={{ fontSize: 11 }} className="text-zinc-500 dark:text-zinc-400" axisLine={false} tickLine={false} />
+              <YAxis type="category" dataKey="name" tick={{ fontSize: 11 }} className="text-zinc-500 dark:text-zinc-400" axisLine={false} tickLine={false} width={60} />
               <Tooltip content={<CustomTooltip />} />
               <Bar dataKey="value" name="Tasks" fill="#6366f1" radius={[0, 4, 4, 0]} />
             </BarChart>

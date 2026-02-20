@@ -48,7 +48,7 @@ export default function Modal({ isOpen, onClose, title, children, size = 'md', c
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             transition={{ type: 'spring', stiffness: 400, damping: 30 }}
             className={clsx(
-              'relative w-full bg-zinc-900 border border-zinc-800 rounded-2xl shadow-2xl',
+              'relative w-full bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-2xl',
               'max-h-[90vh] flex flex-col overflow-hidden',
               sizes[size],
               className
@@ -56,8 +56,8 @@ export default function Modal({ isOpen, onClose, title, children, size = 'md', c
           >
             {/* Header */}
             {title && (
-              <div className="flex items-center justify-between px-6 py-4 border-b border-zinc-800 flex-shrink-0">
-                <h2 className="text-lg font-semibold text-white">{title}</h2>
+              <div className="flex items-center justify-between px-6 py-4 border-b border-zinc-200 dark:border-zinc-800 flex-shrink-0">
+                <h2 className="text-lg font-semibold text-zinc-900 dark:text-white">{title}</h2>
                 <button onClick={onClose} className="btn-ghost p-1.5 rounded-lg">
                   <XIcon className="w-4 h-4" />
                 </button>

@@ -55,17 +55,17 @@ export default function PomodoroWidget() {
             <div className="flex items-center justify-between mb-4">
               <div>
                 <p className={clsx('text-sm font-semibold', phaseConfig.color)}>{phaseConfig.label}</p>
-                <p className="text-xs text-zinc-500">Session #{sessionCount}</p>
+                <p className="text-xs text-zinc-600 dark:text-zinc-500">Session #{sessionCount}</p>
               </div>
               <div className="flex items-center gap-1">
                 <button onClick={toggleSound} className="btn btn-ghost p-1.5">
                   {soundEnabled
-                    ? <Volume2Icon className="w-4 h-4 text-zinc-400" />
-                    : <VolumeXIcon className="w-4 h-4 text-zinc-600" />
+                    ? <Volume2Icon className="w-4 h-4 text-zinc-600 dark:text-zinc-400" />
+                    : <VolumeXIcon className="w-4 h-4 text-zinc-400 dark:text-zinc-600" />
                   }
                 </button>
                 <button onClick={() => dispatch(togglePomodoro())} className="btn btn-ghost p-1.5">
-                  <XIcon className="w-4 h-4 text-zinc-400" />
+                  <XIcon className="w-4 h-4 text-zinc-600 dark:text-zinc-400" />
                 </button>
               </div>
             </div>
@@ -79,7 +79,7 @@ export default function PomodoroWidget() {
                     fill="none"
                     stroke="currentColor"
                     strokeWidth={STROKE}
-                    className="text-zinc-800"
+                    className="text-zinc-300 dark:text-zinc-800"
                   />
                   <motion.circle
                     cx={SIZE / 2} cy={SIZE / 2} r={RADIUS}
@@ -93,7 +93,7 @@ export default function PomodoroWidget() {
                   />
                 </svg>
                 <div className="absolute inset-0 flex flex-col items-center justify-center">
-                  <span className="text-2xl font-mono font-bold text-white">{mins}:{secs}</span>
+                  <span className="text-2xl font-mono font-bold text-zinc-900 dark:text-white">{mins}:{secs}</span>
                 </div>
               </div>
             </div>
@@ -107,8 +107,8 @@ export default function PomodoroWidget() {
                   className={clsx(
                     'flex-1 py-1 text-xs rounded-md font-medium transition-colors',
                     phase === key
-                      ? `bg-zinc-700 ${cfg.color}`
-                      : 'text-zinc-500 hover:text-zinc-300'
+                      ? `bg-zinc-200 dark:bg-zinc-700 ${cfg.color}`
+                      : 'text-zinc-500 dark:text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300'
                   )}
                 >
                   {cfg.label.split(' ')[0]}

@@ -67,23 +67,25 @@ export default function Settings() {
   });
 
   return (
-    <div className="flex gap-6">
+    <div className="flex flex-col md:flex-row gap-4 md:gap-6">
       {/* Sidebar */}
-      <nav className="w-48 flex-shrink-0 space-y-1">
-        {SECTIONS.map(({ id, label, icon: Icon }) => (
-          <button
-            key={id}
-            onClick={() => setSection(id)}
-            className={`w-full flex items-center gap-2.5 px-3 py-2 text-sm rounded-lg transition-colors ${
-              section === id
-                ? 'bg-primary-600/20 text-primary-400 font-medium'
-                : 'text-zinc-400 hover:bg-zinc-800'
-            } ${id === 'danger' ? 'text-red-400 hover:bg-red-900/20 mt-4' : ''}`}
-          >
-            <Icon className="w-4 h-4" />
-            {label}
-          </button>
-        ))}
+      <nav className="w-full md:w-48 flex-shrink-0 space-y-1">
+        <div className="flex md:flex-col gap-2 md:gap-1 overflow-x-auto md:overflow-x-visible pb-2 md:pb-0">
+          {SECTIONS.map(({ id, label, icon: Icon }) => (
+            <button
+              key={id}
+              onClick={() => setSection(id)}
+              className={`flex items-center gap-2.5 px-3 py-2 text-sm rounded-lg transition-colors whitespace-nowrap ${
+                section === id
+                  ? 'bg-primary-100 dark:bg-primary-600/20 text-primary-700 dark:text-primary-400 font-medium shadow-sm'
+                  : 'text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800'
+              } ${id === 'danger' ? 'text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 md:mt-4' : ''}`}
+            >
+              <Icon className="w-4 h-4" />
+              {label}
+            </button>
+          ))}
+        </div>
       </nav>
 
       {/* Content */}
@@ -91,13 +93,13 @@ export default function Settings() {
         key={section}
         initial={{ opacity: 0, x: 10 }}
         animate={{ opacity: 1, x: 0 }}
-        className="flex-1 card p-6 space-y-6"
+        className="flex-1 card p-5 md:p-6 space-y-6"
       >
         {section === 'profile' && (
           <div className="space-y-4">
-            <h2 className="font-semibold text-white text-lg">Profile</h2>
+            <h2 className="font-semibold text-zinc-900 dark:text-white text-lg">Profile</h2>
             <div className="flex items-center gap-4 mb-4">
-              <div className="w-16 h-16 rounded-full bg-primary-600 flex items-center justify-center text-2xl font-bold text-white">
+              <div className="w-16 h-16 rounded-full bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center text-2xl font-bold text-white shadow-lg">
                 {profile.name?.charAt(0)?.toUpperCase() || 'U'}
               </div>
             </div>
@@ -118,7 +120,7 @@ export default function Settings() {
 
         {section === 'appearance' && (
           <div className="space-y-4">
-            <h2 className="font-semibold text-white text-lg">Appearance</h2>
+            <h2 className="font-semibold text-zinc-900 dark:text-white text-lg">Appearance</h2>
             <div>
               <label className="label">Theme</label>
               <div className="flex gap-3 mt-2">
@@ -132,8 +134,8 @@ export default function Settings() {
                     onClick={() => { setTheme(key); prefMutation.mutate({ theme: key }); }}
                     className={`flex items-center gap-2 px-4 py-2.5 rounded-xl border text-sm font-medium transition-all ${
                       theme === key
-                        ? 'bg-primary-600/20 border-primary-500 text-primary-400'
-                        : 'border-zinc-700 text-zinc-400 hover:border-zinc-600'
+                        ? 'bg-primary-100 dark:bg-primary-600/20 border-primary-500 dark:border-primary-500 text-primary-700 dark:text-primary-400'
+                        : 'border-zinc-200 dark:border-zinc-700 text-zinc-600 dark:text-zinc-400 hover:border-zinc-300 dark:hover:border-zinc-600'
                     }`}
                   >
                     <Icon className="w-4 h-4" />
@@ -147,7 +149,7 @@ export default function Settings() {
 
         {section === 'pomodoro' && (
           <div className="space-y-4">
-            <h2 className="font-semibold text-white text-lg">🍅 Pomodoro Settings</h2>
+            <h2 className="font-semibold text-zinc-900 dark:text-white text-lg">🍅 Pomodoro Settings</h2>
             {[
               { key: 'workDuration',      label: 'Work Duration (min)',        min: 5,  max: 90  },
               { key: 'shortBreak',        label: 'Short Break (min)',           min: 1,  max: 30  },
@@ -161,9 +163,9 @@ export default function Settings() {
                     type="range" min={min} max={max}
                     value={pomSettings[key]}
                     onChange={e => setPomSettings(f => ({ ...f, [key]: Number(e.target.value) }))}
-                    className="flex-1 accent-primary-600"
+                    className="flex-1 accent-primary-500"
                   />
-                  <span className="text-white font-mono w-8 text-center">{pomSettings[key]}</span>
+                  <span className="text-zinc-900 dark:text-white font-mono w-8 text-center">{pomSettings[key]}</span>
                 </div>
               </div>
             ))}
@@ -180,7 +182,7 @@ export default function Settings() {
 
         {section === 'security' && (
           <div className="space-y-4">
-            <h2 className="font-semibold text-white text-lg">Change Password</h2>
+            <h2 className="font-semibold text-zinc-900 dark:text-white text-lg">Change Password</h2>
             {[
               { key: 'currentPassword',    label: 'Current Password',  placeholder: 'Current password' },
               { key: 'newPassword',        label: 'New Password',      placeholder: 'New password (8+ chars)' },
@@ -209,23 +211,23 @@ export default function Settings() {
 
         {section === 'notifications' && (
           <div className="space-y-4">
-            <h2 className="font-semibold text-white text-lg">Notifications</h2>
+            <h2 className="font-semibold text-zinc-900 dark:text-white text-lg">Notifications</h2>
             {[
               { key: 'taskReminders',   label: 'Task Reminders',       desc: 'Get notified before tasks are due' },
               { key: 'habitReminders',  label: 'Habit Reminders',      desc: 'Daily reminders for incomplete habits' },
               { key: 'streakAlerts',    label: 'Streak Alerts',        desc: 'Don\'t break your streaks' },
               { key: 'weeklyReport',    label: 'Weekly Report',        desc: 'Email summary every Sunday' },
             ].map(({ key, label, desc }) => (
-              <div key={key} className="flex items-center justify-between py-3 border-b border-zinc-800">
+              <div key={key} className="flex items-center justify-between py-3 border-b border-zinc-200 dark:border-zinc-800">
                 <div>
-                  <p className="text-sm font-medium text-white">{label}</p>
-                  <p className="text-xs text-zinc-500">{desc}</p>
+                  <p className="text-sm font-medium text-zinc-900 dark:text-white">{label}</p>
+                  <p className="text-xs text-zinc-600 dark:text-zinc-500">{desc}</p>
                 </div>
                 <input
                   type="checkbox"
                   defaultChecked={user?.preferences?.notifications?.[key] !== false}
                   onChange={e => prefMutation.mutate({ notifications: { [key]: e.target.checked } })}
-                  className="w-4 h-4 rounded border-zinc-600 text-primary-500 bg-zinc-800"
+                  className="w-4 h-4 rounded border-zinc-300 dark:border-zinc-600 text-primary-500 bg-white dark:bg-zinc-800"
                 />
               </div>
             ))}
@@ -234,10 +236,10 @@ export default function Settings() {
 
         {section === 'danger' && (
           <div className="space-y-4">
-            <h2 className="font-semibold text-red-400 text-lg">Danger Zone</h2>
-            <div className="border border-red-900/50 rounded-xl p-4 bg-red-900/10">
-              <p className="font-medium text-white">Delete Account</p>
-              <p className="text-sm text-zinc-400 mt-1 mb-4">
+            <h2 className="font-semibold text-red-600 dark:text-red-400 text-lg">Danger Zone</h2>
+            <div className="border border-red-200 dark:border-red-900/50 rounded-xl p-4 bg-red-50 dark:bg-red-900/10">
+              <p className="font-medium text-zinc-900 dark:text-white">Delete Account</p>
+              <p className="text-sm text-zinc-600 dark:text-zinc-400 mt-1 mb-4">
                 Permanently delete your account and all associated data. This action cannot be undone.
               </p>
               <button

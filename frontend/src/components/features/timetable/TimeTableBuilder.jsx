@@ -27,7 +27,7 @@ function CellEditor({ col, value, onChange, onBlur }) {
           type="checkbox"
           checked={Boolean(value)}
           onChange={e => onChange(e.target.checked)}
-          className="w-4 h-4 rounded border-zinc-600 text-primary-500 bg-zinc-800 focus:ring-primary-500"
+          className="w-4 h-4 rounded border-zinc-300 dark:border-zinc-600 text-primary-500 bg-white dark:bg-zinc-800 focus:ring-primary-500"
         />
       );
     case 'number':
@@ -37,7 +37,7 @@ function CellEditor({ col, value, onChange, onBlur }) {
           value={value || ''}
           onChange={e => onChange(Number(e.target.value))}
           onBlur={onBlur}
-          className="w-full bg-transparent text-sm text-white outline-none focus:ring-0"
+          className="w-full bg-transparent text-sm text-zinc-900 dark:text-white outline-none focus:ring-0"
         />
       );
     case 'date':
@@ -47,7 +47,7 @@ function CellEditor({ col, value, onChange, onBlur }) {
           value={value ? value.split('T')[0] : ''}
           onChange={e => onChange(e.target.value)}
           onBlur={onBlur}
-          className="w-full bg-transparent text-sm text-zinc-300 outline-none"
+          className="w-full bg-transparent text-sm text-zinc-700 dark:text-zinc-300 outline-none"
         />
       );
     case 'select':
@@ -55,7 +55,7 @@ function CellEditor({ col, value, onChange, onBlur }) {
         <select
           value={value || ''}
           onChange={e => { onChange(e.target.value); onBlur(); }}
-          className="w-full bg-zinc-900 text-sm text-zinc-200 outline-none rounded px-1"
+          className="w-full bg-zinc-50 dark:bg-zinc-900 text-sm text-zinc-900 dark:text-zinc-200 outline-none rounded px-1"
         >
           <option value="">—</option>
           {(col.options || []).map(opt => (
@@ -71,7 +71,7 @@ function CellEditor({ col, value, onChange, onBlur }) {
           onChange={e => onChange(e.target.value.split(',').map(t => t.trim()).filter(Boolean))}
           onBlur={onBlur}
           placeholder="tag1, tag2"
-          className="w-full bg-transparent text-sm text-zinc-300 outline-none"
+          className="w-full bg-transparent text-sm text-zinc-700 dark:text-zinc-300 outline-none"
         />
       );
     default:
@@ -81,7 +81,7 @@ function CellEditor({ col, value, onChange, onBlur }) {
           value={value || ''}
           onChange={e => onChange(e.target.value)}
           onBlur={onBlur}
-          className="w-full bg-transparent text-sm text-white outline-none"
+          className="w-full bg-transparent text-sm text-zinc-900 dark:text-white outline-none"
         />
       );
   }
@@ -104,9 +104,9 @@ function AddColumnModal({ onAdd, onClose }) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center">
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center">
       <form onSubmit={submit} className="card p-5 w-80 space-y-4">
-        <h3 className="font-semibold text-white">Add Column</h3>
+        <h3 className="font-semibold text-zinc-900 dark:text-white">Add Column</h3>
         <div>
           <label className="label">Name</label>
           <input className="input" value={name} onChange={e => setName(e.target.value)} autoFocus />
@@ -196,20 +196,20 @@ export default function TimeTableBuilder({ tableId }) {
 
   if (!tableId) {
     return (
-      <div className="text-center py-16 text-zinc-500">
+      <div className="text-center py-16 text-zinc-500 dark:text-zinc-500">
         <ListIcon className="w-12 h-12 mx-auto mb-3 opacity-30" />
         <p>Select a table to get started</p>
       </div>
     );
   }
 
-  if (isLoading) return <div className="text-zinc-400 p-4">Loading table...</div>;
+  if (isLoading) return <div className="text-zinc-600 dark:text-zinc-400 p-4">Loading table...</div>;
 
   return (
     <div className="space-y-4">
       {/* Table name */}
       <div className="flex items-center justify-between">
-        <h2 className="text-lg font-semibold text-white">{table?.name || 'Untitled Table'}</h2>
+        <h2 className="text-lg font-semibold text-zinc-900 dark:text-white">{table?.name || 'Untitled Table'}</h2>
         <div className="flex gap-2">
           <button onClick={() => setShowAddCol(true)} className="btn btn-secondary gap-2 text-sm">
             <PlusIcon className="w-4 h-4" /> Add Column
@@ -228,22 +228,22 @@ export default function TimeTableBuilder({ tableId }) {
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-zinc-800 bg-zinc-900">
+              <tr className="border-b border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900">
                 <th className="w-8 px-3 py-2" />
                 {columns.map(col => {
                   const Icon = COLUMN_TYPE_CONFIG[col.type]?.icon || TypeIcon;
                   return (
                     <th
                       key={col.id}
-                      className="text-left px-3 py-2 font-medium text-zinc-400 whitespace-nowrap"
+                      className="text-left px-3 py-2 font-medium text-zinc-600 dark:text-zinc-400 whitespace-nowrap"
                       style={{ minWidth: col.width || 160 }}
                     >
                       <div className="flex items-center gap-2 group">
-                        <Icon className="w-3.5 h-3.5 text-zinc-500" />
+                        <Icon className="w-3.5 h-3.5 text-zinc-500 dark:text-zinc-500" />
                         <span>{col.name}</span>
                         <button
                           onClick={() => deleteColumnMutation.mutate(col.id)}
-                          className="opacity-0 group-hover:opacity-100 ml-auto text-zinc-600 hover:text-red-400"
+                          className="opacity-0 group-hover:opacity-100 ml-auto text-zinc-400 dark:text-zinc-600 hover:text-red-500 dark:hover:text-red-400"
                         >
                           <TrashIcon className="w-3 h-3" />
                         </button>
@@ -262,11 +262,11 @@ export default function TimeTableBuilder({ tableId }) {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    className={`border-b border-zinc-800/50 hover:bg-zinc-800/30 transition-colors ${
-                      ri % 2 === 0 ? '' : 'bg-zinc-900/30'
+                    className={`border-b border-zinc-200/50 dark:border-zinc-800/50 hover:bg-zinc-100/50 dark:hover:bg-zinc-800/30 transition-colors ${
+                      ri % 2 === 0 ? '' : 'bg-zinc-50/30 dark:bg-zinc-900/30'
                     }`}
                   >
-                    <td className="px-3 py-2 text-zinc-600">
+                    <td className="px-3 py-2 text-zinc-400 dark:text-zinc-600">
                       <GripIcon className="w-3.5 h-3.5 cursor-grab" />
                     </td>
                     {columns.map(col => {
@@ -287,7 +287,7 @@ export default function TimeTableBuilder({ tableId }) {
                               onBlur={() => handleCellBlur(row._id, col.id)}
                             />
                           ) : (
-                            <span className="text-zinc-300 line-clamp-1">
+                            <span className="text-zinc-700 dark:text-zinc-300 line-clamp-1">
                               {Array.isArray(val) ? val.join(', ') : String(val || '—')}
                             </span>
                           )}
@@ -297,7 +297,7 @@ export default function TimeTableBuilder({ tableId }) {
                     <td className="px-2 py-2">
                       <button
                         onClick={() => deleteRowMutation.mutate(row._id)}
-                        className="text-zinc-700 hover:text-red-400 transition-colors"
+                        className="text-zinc-500 dark:text-zinc-700 hover:text-red-500 dark:hover:text-red-400 transition-colors"
                       >
                         <TrashIcon className="w-3.5 h-3.5" />
                       </button>
@@ -308,7 +308,7 @@ export default function TimeTableBuilder({ tableId }) {
 
               {rows.length === 0 && (
                 <tr>
-                  <td colSpan={columns.length + 2} className="text-center py-10 text-zinc-600">
+                  <td colSpan={columns.length + 2} className="text-center py-10 text-zinc-500 dark:text-zinc-600">
                     No rows yet. Click "Add Row" to start.
                   </td>
                 </tr>
