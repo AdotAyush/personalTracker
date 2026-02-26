@@ -20,6 +20,12 @@ class CreateEditHabitViewModel @Inject constructor(
 
     private val _habitDescription = MutableStateFlow("")
     val habitDescription = _habitDescription.asStateFlow()
+
+    private val _frequency = MutableStateFlow("DAILY")
+    val frequency = _frequency.asStateFlow()
+
+    private val _selectedDays = MutableStateFlow<Set<Int>>(emptySet())
+    val selectedDays = _selectedDays.asStateFlow()
     
     private var _habitId: Long = -1L
 
@@ -27,10 +33,25 @@ class CreateEditHabitViewModel @Inject constructor(
         _habitId = habitId
         if (habitId != -1L) {
             viewModelScope.launch {
-                val habit = repository.getHabit(habitId)
-                if (habit != null) {
-                    _habitTitle.value = habit.title
-                    _habitDescription.value = habit.description ?: ""
+                val habit = repository.getHabit(habitId) // Suspend here
+                habit?.let { h ->
+                    _habitTitle.value = h.title
+                    _habitDescription.value = h.description ?: ""
+                    
+                    // Parse recurrence rule
+                    val rule = h.recurrenceRule // e.g., "DAILY" or "WEEKLY:1,3,5"
+                    if (rule.startsWith("WEEKLY")) {
+                        _frequency.value = "WEEKLY"
+                        val parts = rule.split(":")
+                        if (parts.size > 1) {
+                            val daysStr = parts[1]
+                            if (daysStr.isNotEmpty()) {
+                                _selectedDays.value = daysStr.split(",").mapNotNull {it.toIntOrNull()}.toSet()
+                            }
+                        }
+                    } else {
+                        _frequency.value = "DAILY"
+                    }
                 }
             }
         }
@@ -44,18 +65,40 @@ class CreateEditHabitViewModel @Inject constructor(
         _habitDescription.value = newDescription
     }
 
+    fun updateFrequency(freq: String) {
+        _frequency.value = freq
+    }
+
+    fun toggleDaySelection(dayIndex: Int) {
+        val current = _selectedDays.value
+        if (current.contains(dayIndex)) {
+            _selectedDays.value = current - dayIndex
+        } else {
+            _selectedDays.value = current + dayIndex
+        }
+    }
+
     fun saveHabit(onSaved: () -> Unit) {
-        if (_habitTitle.value.isBlank()) return
+        val currentTitle = _habitTitle.value
+        if (currentTitle.isBlank()) return // Basic validation
         
         viewModelScope.launch {
+            // Construct recurrence rule string
+            val rule = if (_frequency.value == "WEEKLY") {
+                val days = _selectedDays.value.sorted().joinToString(",")
+                "WEEKLY:$days"
+            } else {
+                "DAILY"
+            }
+
             val habit = HabitEntity(
                 id = if (_habitId != -1L) _habitId else 0,
                 userId = "user_1", // Mock
-                title = _habitTitle.value,
+                title = currentTitle,
                 description = _habitDescription.value,
                 color = android.graphics.Color.BLUE,
                 iconName = "star",
-                recurrenceRule = "DAILY",
+                recurrenceRule = rule,
                 reminderTime = null,
                 tags = ""
             )

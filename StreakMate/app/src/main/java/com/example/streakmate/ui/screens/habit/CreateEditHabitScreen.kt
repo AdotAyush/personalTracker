@@ -22,6 +22,8 @@ fun CreateEditHabitScreen(
 
     val title by viewModel.habitTitle.collectAsState()
     val description by viewModel.habitDescription.collectAsState()
+    val selectedFrequency by viewModel.frequency.collectAsState()
+    val selectedDays by viewModel.selectedDays.collectAsState()
     
     val isEditMode = habitId != -1L
     val screenTitle = if (isEditMode) "Edit Habit" else "Create New Habit"
@@ -62,17 +64,42 @@ fun CreateEditHabitScreen(
             Spacer(modifier = Modifier.height(24.dp))
             
             Text("Frequency", style = MaterialTheme.typography.titleSmall)
+            Spacer(modifier = Modifier.height(8.dp))
+            
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 FilterChip(
-                    selected = true,
-                    onClick = { /* Select Daily */ },
+                    selected = selectedFrequency == "DAILY",
+                    onClick = { viewModel.updateFrequency("DAILY") },
                     label = { Text("Daily") }
                 )
                 FilterChip(
-                    selected = false,
-                    onClick = { /* Select Weekly */ },
+                    selected = selectedFrequency == "WEEKLY",
+                    onClick = { viewModel.updateFrequency("WEEKLY") },
                     label = { Text("Weekly") }
                 )
+            }
+            
+            if (selectedFrequency == "WEEKLY") {
+                Spacer(modifier = Modifier.height(16.dp))
+                Text("Select Days:", style = MaterialTheme.typography.bodyMedium)
+                Spacer(modifier = Modifier.height(8.dp))
+                
+                // Day Selection Grid
+                val days = listOf("M", "T", "W", "T", "F", "S", "S")
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    days.forEachIndexed { index, day ->
+                        val isSelected = selectedDays.contains(index)
+                        FilterChip(
+                            selected = isSelected,
+                            onClick = { viewModel.toggleDaySelection(index) },
+                            label = { Text(day) },
+                            modifier = Modifier.size(40.dp)
+                        )
+                    }
+                }
             }
             
             Spacer(modifier = Modifier.weight(1f))
