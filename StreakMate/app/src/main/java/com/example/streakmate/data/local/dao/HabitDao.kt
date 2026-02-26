@@ -15,6 +15,12 @@ interface HabitDao {
     @Query("SELECT * FROM habits WHERE userId = :userId AND archived = 0 ORDER BY priority DESC")
     fun getActiveHabits(userId: String): Flow<List<HabitEntity>>
 
+    @Query("SELECT * FROM habits WHERE id = :id")
+    suspend fun getHabit(id: Long): HabitEntity?
+
+    @Query("SELECT * FROM habit_logs WHERE date = :date")
+    fun getLogsForDate(date: Long): Flow<List<HabitLogEntity>>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertHabit(habit: HabitEntity): Long
 
@@ -32,4 +38,7 @@ interface HabitDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertLog(log: HabitLogEntity): Long
+
+    @Query("DELETE FROM habit_logs WHERE habitId = :habitId AND date = :date")
+    suspend fun deleteHabitLog(habitId: Long, date: Long)
 }

@@ -7,15 +7,21 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CreateEditHabitScreen(
     habitId: Long,
-    onNavigateBack: () -> Unit
+    onNavigateBack: () -> Unit,
+    viewModel: CreateEditHabitViewModel = hiltViewModel()
 ) {
-    var title by remember { mutableStateOf("") }
-    var description by remember { mutableStateOf("") }
+    LaunchedEffect(habitId) {
+        viewModel.initialize(habitId)
+    }
+
+    val title by viewModel.habitTitle.collectAsState()
+    val description by viewModel.habitDescription.collectAsState()
     
     val isEditMode = habitId != -1L
     val screenTitle = if (isEditMode) "Edit Habit" else "Create New Habit"
@@ -40,7 +46,7 @@ fun CreateEditHabitScreen(
         ) {
             OutlinedTextField(
                 value = title,
-                onValueChange = { title = it },
+                onValueChange = viewModel::updateTitle,
                 label = { Text("Title") },
                 modifier = Modifier.fillMaxWidth()
             )
@@ -48,7 +54,7 @@ fun CreateEditHabitScreen(
             
             OutlinedTextField(
                 value = description,
-                onValueChange = { description = it },
+                onValueChange = viewModel::updateDescription,
                 label = { Text("Description (Optional)") },
                 modifier = Modifier.fillMaxWidth(),
                 minLines = 3
@@ -73,8 +79,7 @@ fun CreateEditHabitScreen(
             
             Button(
                 onClick = {
-                    // Save habit via ViewModel
-                    onNavigateBack()
+                    viewModel.saveHabit(onSaved = onNavigateBack)
                 },
                 modifier = Modifier.fillMaxWidth(),
                 enabled = title.isNotBlank()

@@ -9,11 +9,15 @@ import javax.inject.Singleton
 
 interface HabitRepository {
     fun getActiveHabits(userId: String): Flow<List<HabitEntity>>
+    suspend fun getHabit(id: Long): HabitEntity?
+    fun getLogsForDate(date: Long): Flow<List<HabitLogEntity>>
     suspend fun createHabit(habit: HabitEntity): Long
     suspend fun updateHabit(habit: HabitEntity)
     suspend fun deleteHabit(habit: HabitEntity)
     fun getHabitLogs(habitId: Long): Flow<List<HabitLogEntity>>
     suspend fun logHabit(habitId: Long, date: Long, note: String? = null)
+    suspend fun removeLog(habitId: Long, date: Long)
+    suspend fun getHabitLog(habitId: Long, date: Long): HabitLogEntity?
 }
 
 @Singleton
@@ -22,6 +26,14 @@ class HabitRepositoryImpl @Inject constructor(
 ) : HabitRepository {
     override fun getActiveHabits(userId: String): Flow<List<HabitEntity>> {
         return habitDao.getActiveHabits(userId)
+    }
+
+    override suspend fun getHabit(id: Long): HabitEntity? {
+        return habitDao.getHabit(id)
+    }
+
+    override fun getLogsForDate(date: Long): Flow<List<HabitLogEntity>> {
+        return habitDao.getLogsForDate(date)
     }
 
     override suspend fun createHabit(habit: HabitEntity): Long {
@@ -47,5 +59,13 @@ class HabitRepositoryImpl @Inject constructor(
             note = note
         )
         habitDao.insertLog(log)
+    }
+
+    override suspend fun removeLog(habitId: Long, date: Long) {
+        habitDao.deleteHabitLog(habitId, date)
+    }
+    
+    override suspend fun getHabitLog(habitId: Long, date: Long): HabitLogEntity? {
+        return habitDao.getHabitLog(habitId, date)
     }
 }
