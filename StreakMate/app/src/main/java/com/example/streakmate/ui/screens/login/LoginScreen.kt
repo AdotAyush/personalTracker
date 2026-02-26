@@ -13,8 +13,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material.icons.filled.Visibility
-import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -211,12 +209,11 @@ fun LoginScreen(
                             )
                         },
                         trailingIcon = {
-                            IconButton(onClick = { passwordVisible = !passwordVisible }) {
-                                Icon(
-                                    if (passwordVisible) Icons.Default.VisibilityOff
-                                    else Icons.Default.Visibility,
-                                    contentDescription = if (passwordVisible) "Hide password" else "Show password",
-                                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                            TextButton(onClick = { passwordVisible = !passwordVisible }) {
+                                Text(
+                                    text = if (passwordVisible) "Hide" else "Show",
+                                    style = MaterialTheme.typography.labelMedium,
+                                    color = MaterialTheme.colorScheme.primary
                                 )
                             }
                         },

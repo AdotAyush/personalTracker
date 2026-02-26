@@ -3,6 +3,7 @@ package com.example.streakmate.ui.screens.home
 import androidx.compose.animation.*
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -12,11 +13,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.outlined.CheckCircle
-import androidx.compose.material.icons.outlined.RadioButtonUnchecked
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -398,17 +398,20 @@ fun HabitItem(
                 ) { completed ->
                     if (completed) {
                         Icon(
-                            Icons.Outlined.CheckCircle,
+                            Icons.Default.CheckCircle,
                             contentDescription = "Completed",
                             tint = MaterialTheme.colorScheme.primary,
                             modifier = Modifier.size(28.dp)
                         )
                     } else {
-                        Icon(
-                            Icons.Outlined.RadioButtonUnchecked,
-                            contentDescription = "Not completed",
-                            tint = MaterialTheme.colorScheme.outline,
-                            modifier = Modifier.size(28.dp)
+                        Box(
+                            modifier = Modifier
+                                .size(28.dp)
+                                .border(
+                                    width = 2.dp,
+                                    color = MaterialTheme.colorScheme.outline,
+                                    shape = CircleShape
+                                )
                         )
                     }
                 }

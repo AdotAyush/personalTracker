@@ -8,8 +8,12 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
-import androidx.compose.material.icons.outlined.CheckCircle
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowForward
+import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -214,7 +218,7 @@ fun HabitDetailScreen(
                             title = "Current\nStreak",
                             value = "$currentStreak",
                             subtitle = "days",
-                            icon = Icons.Default.Whatshot,
+                            icon = Icons.Default.Star,
                             iconTint = MaterialTheme.colorScheme.error,
                             modifier = Modifier.weight(1f)
                         )
@@ -222,7 +226,7 @@ fun HabitDetailScreen(
                             title = "Longest\nStreak",
                             value = "$longestStreak",
                             subtitle = "days",
-                            icon = Icons.Default.EmojiEvents,
+                            icon = Icons.Default.Star,
                             iconTint = MaterialTheme.colorScheme.secondary,
                             modifier = Modifier.weight(1f)
                         )
@@ -238,7 +242,7 @@ fun HabitDetailScreen(
                             title = "Total\nCompleted",
                             value = "$totalCompletions",
                             subtitle = "times",
-                            icon = Icons.Outlined.CheckCircle,
+                            icon = Icons.Default.CheckCircle,
                             iconTint = MaterialTheme.colorScheme.primary,
                             modifier = Modifier.weight(1f)
                         )
@@ -246,7 +250,7 @@ fun HabitDetailScreen(
                             title = "30-Day\nRate",
                             value = "${(completionRate * 100).toInt()}%",
                             subtitle = "completion",
-                            icon = Icons.Default.TrendingUp,
+                            icon = Icons.Default.ArrowForward,
                             iconTint = MaterialTheme.colorScheme.tertiary,
                             modifier = Modifier.weight(1f)
                         )
@@ -348,7 +352,7 @@ fun HabitDetailScreen(
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Icon(
-                                    Icons.Outlined.CheckCircle,
+                                    Icons.Default.CheckCircle,
                                     contentDescription = null,
                                     tint = MaterialTheme.colorScheme.primary,
                                     modifier = Modifier.size(20.dp)
