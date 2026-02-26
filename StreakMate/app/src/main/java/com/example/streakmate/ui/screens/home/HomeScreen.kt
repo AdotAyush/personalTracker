@@ -47,6 +47,7 @@ fun HomeScreen(
     val habitsState by viewModel.uiState.collectAsState()
     val progress by viewModel.completionProgress.collectAsState()
     val completedCount by viewModel.completedCount.collectAsState()
+    val isDarkMode by viewModel.themePreferences.isDarkMode.collectAsState()
     
     var showMenu by remember { mutableStateOf(false) }
     var habitToDelete by remember { mutableStateOf<Long?>(null) }
@@ -96,6 +97,13 @@ fun HomeScreen(
             TopAppBar(
                 title = { },
                 actions = {
+                    // Dark/Light mode toggle
+                    IconButton(onClick = { viewModel.themePreferences.toggleDarkMode() }) {
+                        Text(
+                            text = if (isDarkMode) "☀️" else "🌙",
+                            fontSize = 20.sp
+                        )
+                    }
                     IconButton(onClick = onCalendarClick) {
                         Icon(
                             Icons.Default.DateRange,

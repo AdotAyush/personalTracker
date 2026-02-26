@@ -2,7 +2,9 @@ package com.example.streakmate.ui.screens.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.streakmate.data.auth.AuthRepository
 import com.example.streakmate.data.local.entity.HabitEntity
+import com.example.streakmate.data.preferences.ThemePreferences
 import com.example.streakmate.data.repository.HabitRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -19,13 +21,22 @@ data class HabitUiState(
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val repository: HabitRepository
+    private val repository: HabitRepository,
+    private val authRepository: AuthRepository,
+    val themePreferences: ThemePreferences
 ) : ViewModel() {
 
     private val userId = "user_1" // Mock
     private val _selectedDate = MutableStateFlow(LocalDate.now())
 
     private val _refreshTrigger = MutableStateFlow(0)
+
+    init {
+        // Ensure user row exists for FK constraints on every Home access
+        viewModelScope.launch {
+            authRepository.ensureUserExists()
+        }
+    }
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val uiState: StateFlow<List<HabitUiState>> = combine(

@@ -61,6 +61,18 @@ class AuthRepository @Inject constructor(
         }
     }
     
+    suspend fun ensureUserExists() {
+        withContext(Dispatchers.IO) {
+            val user = UserEntity(
+                id = "user_1",
+                email = "user@streakmate.app",
+                displayName = "User",
+                photoUrl = null
+            )
+            userDao.insertUser(user)
+        }
+    }
+
     fun logout() {
         setLoggedIn(false)
     }

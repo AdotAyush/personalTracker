@@ -49,7 +49,10 @@ class LoginViewModel @Inject constructor(
     
     fun checkSession(onLoggedIn: () -> Unit) {
         if (authRepository.isLoggedIn()) {
-            onLoggedIn()
+            viewModelScope.launch {
+                authRepository.ensureUserExists()
+                onLoggedIn()
+            }
         }
     }
 }

@@ -205,7 +205,13 @@ fun CalendarScreen(
                             style = MaterialTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
-                        listOf(HeatmapNone, HeatmapLow, HeatmapMedium, HeatmapHigh, HeatmapMax).forEach { color ->
+                        val legendIsDark = LocalDarkTheme.current
+                        val legendColors = if (legendIsDark) {
+                            listOf(HeatmapNoneDark, HeatmapLowDark, HeatmapMediumDark, HeatmapHighDark, HeatmapMaxDark)
+                        } else {
+                            listOf(HeatmapNone, HeatmapLow, HeatmapMedium, HeatmapHigh, HeatmapMax)
+                        }
+                        legendColors.forEach { color ->
                             Box(
                                 modifier = Modifier
                                     .size(20.dp)
@@ -286,18 +292,21 @@ fun CalendarDayCell(
     isFuture: Boolean,
     onClick: () -> Unit
 ) {
+    val isDark = LocalDarkTheme.current
+
     val bgColor = when {
         isFuture -> MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
-        completionRatio >= 1f -> HeatmapMax
-        completionRatio >= 0.75f -> HeatmapHigh
-        completionRatio >= 0.5f -> HeatmapMedium
-        completionRatio > 0f -> HeatmapLow
-        else -> HeatmapNone
+        completionRatio >= 1f -> if (isDark) HeatmapMaxDark else HeatmapMax
+        completionRatio >= 0.75f -> if (isDark) HeatmapHighDark else HeatmapHigh
+        completionRatio >= 0.5f -> if (isDark) HeatmapMediumDark else HeatmapMedium
+        completionRatio > 0f -> if (isDark) HeatmapLowDark else HeatmapLow
+        else -> if (isDark) HeatmapNoneDark else HeatmapNone
     }
 
     val textColor = when {
         isFuture -> MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f)
         completionRatio >= 0.5f -> Color.White
+        completionRatio > 0f -> if (isDark) Color.White else MaterialTheme.colorScheme.onSurface
         else -> MaterialTheme.colorScheme.onSurface
     }
 
