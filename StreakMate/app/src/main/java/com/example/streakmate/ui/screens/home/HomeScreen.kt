@@ -293,13 +293,13 @@ fun ProgressCard(
                     // Circular indicator
                     Box(contentAlignment = Alignment.Center) {
                         CircularProgressIndicator(
-                            progress = { 1f },
+                            progress = 1f,
                             modifier = Modifier.size(56.dp),
                             color = Color.White.copy(alpha = 0.2f),
                             strokeWidth = 6.dp,
                         )
                         CircularProgressIndicator(
-                            progress = { animatedProgress },
+                            progress = animatedProgress,
                             modifier = Modifier.size(56.dp),
                             color = Color.White,
                             strokeWidth = 6.dp,
@@ -317,7 +317,7 @@ fun ProgressCard(
                 Spacer(modifier = Modifier.height(16.dp))
                 
                 LinearProgressIndicator(
-                    progress = { animatedProgress },
+                    progress = animatedProgress,
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(6.dp)
@@ -359,7 +359,7 @@ fun HabitItem(
         targetValue = if (uiState.isCompletedToday)
             MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.5f)
         else
-            MaterialTheme.colorScheme.surfaceContainerLow,
+            MaterialTheme.colorScheme.surface,
         animationSpec = tween(300),
         label = "bgColor"
     )

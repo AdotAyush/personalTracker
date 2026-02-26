@@ -102,9 +102,7 @@ fun CreateEditHabitScreen(
                     shape = RoundedCornerShape(14.dp),
                     colors = OutlinedTextFieldDefaults.colors(
                         focusedBorderColor = MaterialTheme.colorScheme.primary,
-                        unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant,
-                        focusedContainerColor = MaterialTheme.colorScheme.surfaceContainerLow,
-                        unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainerLow
+                        unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant
                     )
                 )
 
@@ -127,9 +125,7 @@ fun CreateEditHabitScreen(
                     shape = RoundedCornerShape(14.dp),
                     colors = OutlinedTextFieldDefaults.colors(
                         focusedBorderColor = MaterialTheme.colorScheme.primary,
-                        unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant,
-                        focusedContainerColor = MaterialTheme.colorScheme.surfaceContainerLow,
-                        unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainerLow
+                        unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant
                     )
                 )
 
@@ -235,7 +231,7 @@ fun CreateEditHabitScreen(
                                         .clickable { viewModel.toggleDaySelection(index) },
                                     shape = RoundedCornerShape(12.dp),
                                     color = if (isSelected) MaterialTheme.colorScheme.primary
-                                        else MaterialTheme.colorScheme.surfaceContainerHigh,
+                                        else MaterialTheme.colorScheme.surfaceVariant,
                                     tonalElevation = 0.dp
                                 ) {
                                     Box(contentAlignment = Alignment.Center) {
@@ -306,7 +302,7 @@ fun FrequencyOption(
         shape = RoundedCornerShape(14.dp),
         colors = CardDefaults.cardColors(
             containerColor = if (isSelected) MaterialTheme.colorScheme.primaryContainer
-                else MaterialTheme.colorScheme.surfaceContainerLow
+                else MaterialTheme.colorScheme.surface
         ),
         border = if (isSelected) BorderStroke(
             width = 2.dp,

@@ -70,7 +70,7 @@ fun CalendarScreen(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(16.dp),
                 colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceContainerLow
+                    containerColor = MaterialTheme.colorScheme.surface
                 ),
                 elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
             ) {
@@ -184,7 +184,7 @@ fun CalendarScreen(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(12.dp),
                 colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceContainerLow
+                    containerColor = MaterialTheme.colorScheme.surface
                 )
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
@@ -259,7 +259,7 @@ fun CalendarScreen(
                             if (count > 0 && total > 0) {
                                 Spacer(modifier = Modifier.height(8.dp))
                                 LinearProgressIndicator(
-                                    progress = { count.toFloat() / total },
+                                    progress = count.toFloat() / total,
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .height(6.dp)
@@ -287,7 +287,7 @@ fun CalendarDayCell(
     onClick: () -> Unit
 ) {
     val bgColor = when {
-        isFuture -> MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.5f)
+        isFuture -> MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
         completionRatio >= 1f -> HeatmapMax
         completionRatio >= 0.75f -> HeatmapHigh
         completionRatio >= 0.5f -> HeatmapMedium

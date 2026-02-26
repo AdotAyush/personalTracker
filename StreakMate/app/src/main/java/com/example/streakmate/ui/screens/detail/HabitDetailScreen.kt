@@ -259,7 +259,7 @@ fun HabitDetailScreen(
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(16.dp),
                         colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.surfaceContainerLow
+                            containerColor = MaterialTheme.colorScheme.surface
                         )
                     ) {
                         Column(modifier = Modifier.padding(16.dp)) {
@@ -271,7 +271,7 @@ fun HabitDetailScreen(
                             )
                             Spacer(modifier = Modifier.height(12.dp))
                             LinearProgressIndicator(
-                                progress = { completionRate },
+                                progress = completionRate,
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .height(10.dp)
@@ -306,7 +306,7 @@ fun HabitDetailScreen(
                             modifier = Modifier.fillMaxWidth(),
                             shape = RoundedCornerShape(12.dp),
                             colors = CardDefaults.cardColors(
-                                containerColor = MaterialTheme.colorScheme.surfaceContainerLow
+                                containerColor = MaterialTheme.colorScheme.surface
                             )
                         ) {
                             Box(
@@ -337,7 +337,7 @@ fun HabitDetailScreen(
                             modifier = Modifier.fillMaxWidth(),
                             shape = RoundedCornerShape(12.dp),
                             colors = CardDefaults.cardColors(
-                                containerColor = MaterialTheme.colorScheme.surfaceContainerLow
+                                containerColor = MaterialTheme.colorScheme.surface
                             ),
                             elevation = CardDefaults.cardElevation(0.dp)
                         ) {
@@ -399,7 +399,7 @@ fun StatCard(
         modifier = modifier,
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceContainerLow
+            containerColor = MaterialTheme.colorScheme.surface
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
     ) {
