@@ -1,6 +1,7 @@
 package com.example.streakmate.ui.screens.habit
 
 import androidx.compose.animation.*
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -18,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -145,7 +147,8 @@ fun CreateEditHabitScreen(
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
                     habitColors.forEach { color ->
-                        val isSelected = selectedColor == color.value.toLong().toInt()
+                        val colorInt = color.toArgb()
+                        val isSelected = selectedColor == colorInt
                         Box(
                             modifier = Modifier
                                 .size(36.dp)
@@ -159,7 +162,7 @@ fun CreateEditHabitScreen(
                                     ) else Modifier
                                 )
                                 .clickable {
-                                    viewModel.updateColor(color.value.toLong().toInt())
+                                    viewModel.updateColor(colorInt)
                                 },
                             contentAlignment = Alignment.Center
                         ) {
@@ -305,8 +308,9 @@ fun FrequencyOption(
             containerColor = if (isSelected) MaterialTheme.colorScheme.primaryContainer
                 else MaterialTheme.colorScheme.surfaceContainerLow
         ),
-        border = if (isSelected) CardDefaults.outlinedCardBorder().copy(
-            brush = androidx.compose.ui.graphics.SolidColor(MaterialTheme.colorScheme.primary)
+        border = if (isSelected) BorderStroke(
+            width = 2.dp,
+            color = MaterialTheme.colorScheme.primary
         ) else null
     ) {
         Column(

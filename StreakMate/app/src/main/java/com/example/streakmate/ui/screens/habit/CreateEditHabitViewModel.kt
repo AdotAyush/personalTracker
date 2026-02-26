@@ -26,27 +26,31 @@ class CreateEditHabitViewModel @Inject constructor(
 
     private val _selectedDays = MutableStateFlow<Set<Int>>(emptySet())
     val selectedDays = _selectedDays.asStateFlow()
-    
+
+    private val _selectedColor = MutableStateFlow(0xFF42A5F5.toInt()) // Default: HabitBlue
+    val selectedColor = _selectedColor.asStateFlow()
+
     private var _habitId: Long = -1L
 
     fun initialize(habitId: Long) {
         _habitId = habitId
         if (habitId != -1L) {
             viewModelScope.launch {
-                val habit = repository.getHabit(habitId) // Suspend here
+                val habit = repository.getHabit(habitId)
                 habit?.let { h ->
                     _habitTitle.value = h.title
                     _habitDescription.value = h.description ?: ""
-                    
-                    // Parse recurrence rule
-                    val rule = h.recurrenceRule // e.g., "DAILY" or "WEEKLY:1,3,5"
+                    _selectedColor.value = h.color
+
+                    val rule = h.recurrenceRule
                     if (rule.startsWith("WEEKLY")) {
                         _frequency.value = "WEEKLY"
                         val parts = rule.split(":")
                         if (parts.size > 1) {
                             val daysStr = parts[1]
                             if (daysStr.isNotEmpty()) {
-                                _selectedDays.value = daysStr.split(",").mapNotNull {it.toIntOrNull()}.toSet()
+                                _selectedDays.value = daysStr.split(",")
+                                    .mapNotNull { it.toIntOrNull() }.toSet()
                             }
                         }
                     } else {
@@ -57,52 +61,39 @@ class CreateEditHabitViewModel @Inject constructor(
         }
     }
 
-    fun updateTitle(newTitle: String) {
-        _habitTitle.value = newTitle
-    }
-    
-    fun updateDescription(newDescription: String) {
-        _habitDescription.value = newDescription
-    }
-
-    fun updateFrequency(freq: String) {
-        _frequency.value = freq
-    }
+    fun updateTitle(newTitle: String) { _habitTitle.value = newTitle }
+    fun updateDescription(newDescription: String) { _habitDescription.value = newDescription }
+    fun updateFrequency(freq: String) { _frequency.value = freq }
+    fun updateColor(color: Int) { _selectedColor.value = color }
 
     fun toggleDaySelection(dayIndex: Int) {
         val current = _selectedDays.value
-        if (current.contains(dayIndex)) {
-            _selectedDays.value = current - dayIndex
-        } else {
-            _selectedDays.value = current + dayIndex
-        }
+        _selectedDays.value = if (current.contains(dayIndex)) current - dayIndex else current + dayIndex
     }
 
     fun saveHabit(onSaved: () -> Unit) {
         val currentTitle = _habitTitle.value
-        if (currentTitle.isBlank()) return // Basic validation
-        
+        if (currentTitle.isBlank()) return
+
         viewModelScope.launch {
-            // Construct recurrence rule string
             val rule = if (_frequency.value == "WEEKLY") {
-                val days = _selectedDays.value.sorted().joinToString(",")
-                "WEEKLY:$days"
+                "WEEKLY:${_selectedDays.value.sorted().joinToString(",")}"
             } else {
                 "DAILY"
             }
 
             val habit = HabitEntity(
                 id = if (_habitId != -1L) _habitId else 0,
-                userId = "user_1", // Mock
+                userId = "user_1",
                 title = currentTitle,
-                description = _habitDescription.value,
-                color = android.graphics.Color.BLUE,
+                description = _habitDescription.value.ifBlank { null },
+                color = _selectedColor.value,
                 iconName = "star",
                 recurrenceRule = rule,
                 reminderTime = null,
                 tags = ""
             )
-            
+
             if (_habitId == -1L) {
                 repository.createHabit(habit)
             } else {
@@ -112,3 +103,4 @@ class CreateEditHabitViewModel @Inject constructor(
         }
     }
 }
+
