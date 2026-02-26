@@ -11,10 +11,15 @@ interface HabitRepository {
     fun getActiveHabits(userId: String): Flow<List<HabitEntity>>
     suspend fun getHabit(id: Long): HabitEntity?
     fun getLogsForDate(date: Long): Flow<List<HabitLogEntity>>
+    fun getLogsForDateRange(startDate: Long, endDate: Long): Flow<List<HabitLogEntity>>
+    fun getHabitLogsForRange(habitId: Long, startDate: Long, endDate: Long): Flow<List<HabitLogEntity>>
+    suspend fun getTotalCompletions(habitId: Long): Int
     suspend fun createHabit(habit: HabitEntity): Long
     suspend fun updateHabit(habit: HabitEntity)
     suspend fun deleteHabit(habit: HabitEntity)
+    suspend fun deleteHabitById(habitId: Long)
     fun getHabitLogs(habitId: Long): Flow<List<HabitLogEntity>>
+    fun getRecentHabitLogs(habitId: Long, limit: Int): Flow<List<HabitLogEntity>>
     suspend fun logHabit(habitId: Long, date: Long, note: String? = null)
     suspend fun removeLog(habitId: Long, date: Long)
     suspend fun getHabitLog(habitId: Long, date: Long): HabitLogEntity?
@@ -36,6 +41,18 @@ class HabitRepositoryImpl @Inject constructor(
         return habitDao.getLogsForDate(date)
     }
 
+    override fun getLogsForDateRange(startDate: Long, endDate: Long): Flow<List<HabitLogEntity>> {
+        return habitDao.getLogsForDateRange(startDate, endDate)
+    }
+
+    override fun getHabitLogsForRange(habitId: Long, startDate: Long, endDate: Long): Flow<List<HabitLogEntity>> {
+        return habitDao.getHabitLogsForRange(habitId, startDate, endDate)
+    }
+
+    override suspend fun getTotalCompletions(habitId: Long): Int {
+        return habitDao.getTotalCompletions(habitId)
+    }
+
     override suspend fun createHabit(habit: HabitEntity): Long {
         return habitDao.insertHabit(habit)
     }
@@ -48,8 +65,16 @@ class HabitRepositoryImpl @Inject constructor(
         habitDao.deleteHabit(habit)
     }
 
+    override suspend fun deleteHabitById(habitId: Long) {
+        habitDao.deleteHabitById(habitId)
+    }
+
     override fun getHabitLogs(habitId: Long): Flow<List<HabitLogEntity>> {
         return habitDao.getHabitLogs(habitId)
+    }
+
+    override fun getRecentHabitLogs(habitId: Long, limit: Int): Flow<List<HabitLogEntity>> {
+        return habitDao.getRecentHabitLogs(habitId, limit)
     }
 
     override suspend fun logHabit(habitId: Long, date: Long, note: String?) {
@@ -69,3 +94,4 @@ class HabitRepositoryImpl @Inject constructor(
         return habitDao.getHabitLog(habitId, date)
     }
 }
+

@@ -25,20 +25,25 @@ class HomeViewModel @Inject constructor(
     private val userId = "user_1" // Mock
     private val _selectedDate = MutableStateFlow(LocalDate.now())
 
+    private val _refreshTrigger = MutableStateFlow(0)
+
     @OptIn(ExperimentalCoroutinesApi::class)
-    val uiState: StateFlow<List<HabitUiState>> = _selectedDate
+    val uiState: StateFlow<List<HabitUiState>> = combine(
+        _selectedDate,
+        _refreshTrigger
+    ) { date, _ -> date }
         .flatMapLatest { date ->
             combine(
                 repository.getActiveHabits(userId),
-                repository.getLogsForDate(date.toEpochDay()) 
+                repository.getLogsForDate(date.toEpochDay())
             ) { habits, logs ->
                 val completedHabitIds = logs.map { it.habitId }.toSet()
-                
+
                 habits.map { habit ->
                     HabitUiState(
                         habit = habit,
                         isCompletedToday = completedHabitIds.contains(habit.id),
-                        currentStreak = 0 // Placeholder
+                        currentStreak = 0 // Will compute below
                     )
                 }
             }
@@ -48,6 +53,15 @@ class HomeViewModel @Inject constructor(
             started = SharingStarted.WhileSubscribed(5000),
             initialValue = emptyList()
         )
+
+    val completionProgress: StateFlow<Float> = uiState.map { habits ->
+        if (habits.isEmpty()) 0f
+        else habits.count { it.isCompletedToday }.toFloat() / habits.size
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), 0f)
+
+    val completedCount: StateFlow<Int> = uiState.map { habits ->
+        habits.count { it.isCompletedToday }
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), 0)
 
     fun toggleHabitCompletion(habitId: Long, isCompleted: Boolean) {
         viewModelScope.launch {
@@ -59,45 +73,65 @@ class HomeViewModel @Inject constructor(
             }
         }
     }
-    
+
+    fun deleteHabit(habitId: Long) {
+        viewModelScope.launch {
+            repository.deleteHabitById(habitId)
+            _refreshTrigger.value++
+        }
+    }
+
     fun createSampleData() {
-         viewModelScope.launch {
+        viewModelScope.launch {
             repository.createHabit(
                 HabitEntity(
                     userId = userId,
                     title = "Drink Water",
-                    description = "2L per day",
-                    color = android.graphics.Color.BLUE,
+                    description = "Stay hydrated - 2L per day",
+                    color = 0xFF42A5F5.toInt(),
                     iconName = "water",
                     recurrenceRule = "DAILY",
                     reminderTime = null,
                     tags = "health"
                 )
             )
-             repository.createHabit(
+            repository.createHabit(
                 HabitEntity(
                     userId = userId,
                     title = "Morning Run",
-                    description = "5km jog",
-                    color = android.graphics.Color.RED,
+                    description = "5km jog before work",
+                    color = 0xFFEF5350.toInt(),
                     iconName = "run",
                     recurrenceRule = "DAILY",
                     reminderTime = null,
-                     tags = "fitness"
+                    tags = "fitness"
                 )
             )
-             repository.createHabit(
+            repository.createHabit(
                 HabitEntity(
                     userId = userId,
-                    title = "Read",
-                    description = "30 mins",
-                    color = android.graphics.Color.YELLOW,
+                    title = "Read Books",
+                    description = "30 minutes of reading",
+                    color = 0xFFFFCA28.toInt(),
                     iconName = "book",
                     recurrenceRule = "DAILY",
                     reminderTime = null,
-                     tags = "mind"
+                    tags = "mind"
+                )
+            )
+            repository.createHabit(
+                HabitEntity(
+                    userId = userId,
+                    title = "Meditate",
+                    description = "10 minutes mindfulness",
+                    color = 0xFF7E57C2.toInt(),
+                    iconName = "meditation",
+                    recurrenceRule = "DAILY",
+                    reminderTime = null,
+                    tags = "wellness"
                 )
             )
         }
     }
 }
+

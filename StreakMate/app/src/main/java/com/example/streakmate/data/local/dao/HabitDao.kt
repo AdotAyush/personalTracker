@@ -21,6 +21,15 @@ interface HabitDao {
     @Query("SELECT * FROM habit_logs WHERE date = :date")
     fun getLogsForDate(date: Long): Flow<List<HabitLogEntity>>
 
+    @Query("SELECT * FROM habit_logs WHERE date BETWEEN :startDate AND :endDate")
+    fun getLogsForDateRange(startDate: Long, endDate: Long): Flow<List<HabitLogEntity>>
+
+    @Query("SELECT * FROM habit_logs WHERE habitId = :habitId AND date BETWEEN :startDate AND :endDate ORDER BY date ASC")
+    fun getHabitLogsForRange(habitId: Long, startDate: Long, endDate: Long): Flow<List<HabitLogEntity>>
+
+    @Query("SELECT COUNT(*) FROM habit_logs WHERE habitId = :habitId")
+    suspend fun getTotalCompletions(habitId: Long): Int
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertHabit(habit: HabitEntity): Long
 
@@ -30,15 +39,24 @@ interface HabitDao {
     @Delete
     suspend fun deleteHabit(habit: HabitEntity)
 
+    @Query("DELETE FROM habits WHERE id = :habitId")
+    suspend fun deleteHabitById(habitId: Long)
+
     @Query("SELECT * FROM habit_logs WHERE habitId = :habitId AND date = :date")
     suspend fun getHabitLog(habitId: Long, date: Long): HabitLogEntity?
 
     @Query("SELECT * FROM habit_logs WHERE habitId = :habitId ORDER BY date DESC")
     fun getHabitLogs(habitId: Long): Flow<List<HabitLogEntity>>
 
+    @Query("SELECT * FROM habit_logs WHERE habitId = :habitId ORDER BY date DESC LIMIT :limit")
+    fun getRecentHabitLogs(habitId: Long, limit: Int): Flow<List<HabitLogEntity>>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertLog(log: HabitLogEntity): Long
 
     @Query("DELETE FROM habit_logs WHERE habitId = :habitId AND date = :date")
     suspend fun deleteHabitLog(habitId: Long, date: Long)
+
+    @Query("SELECT COUNT(DISTINCT habitId) FROM habit_logs WHERE date = :date")
+    suspend fun getCompletedHabitCountForDate(date: Long): Int
 }
